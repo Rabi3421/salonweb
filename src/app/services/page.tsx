@@ -1,33 +1,29 @@
-import React from 'react';
-import type { Metadata } from 'next';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import StickyBottomCTA from '@/components/StickyBottomCTA';
-import ServicesHero from './components/ServicesHero';
-import ServiceCatalog from './components/ServiceCatalog';
-import PackagesSection from './components/PackagesSection';
-import BookingForm from './components/BookingForm';
-import FAQSection from './components/FAQSection';
+import JsonLd from '@/components/JsonLd';
+import { getPublicSiteData } from '@/lib/public-site-data';
+import { buildPageMetadata } from '@/lib/seo';
+import { buildBreadcrumbSchema, buildServiceSchema } from '@/lib/structured-data';
+import ServicesClient from './ServicesClient';
 
-export const metadata: Metadata = {
-  title: 'Services & Booking — RoseLuxe Luxury Salon Ahmedabad',
+export const metadata = buildPageMetadata({
+  title: 'Salon Services & Pricing',
   description:
-    'Explore RoseLuxe premium hair, skin, nail, bridal and spa services with transparent pricing. Request your appointment online in minutes.',
-};
+    'Explore premium salon services and pricing for hair styling, hair spa, facial treatment, manicure, pedicure, nail art, bridal makeup and party makeup.',
+  path: '/services',
+});
 
 export default function ServicesPage() {
+  const data = getPublicSiteData();
+
   return (
     <>
-      <Header />
-      <main className="pb-16 md:pb-0">
-        <ServicesHero />
-        <ServiceCatalog />
-        <PackagesSection />
-        <BookingForm />
-        <FAQSection />
-      </main>
-      <Footer />
-      <StickyBottomCTA />
+      <JsonLd data={buildServiceSchema(data)} />
+      <JsonLd
+        data={buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Services', path: '/services' },
+        ])}
+      />
+      <ServicesClient />
     </>
   );
 }

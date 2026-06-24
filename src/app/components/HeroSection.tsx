@@ -95,7 +95,7 @@ export default function HeroSection() {
         {/* Buttons */}
         <div ref={btnsRef} className="flex flex-col sm:flex-row gap-4 mb-14">
           <Link
-            href="/services#booking"
+            href="/book-appointment"
             className="pink-gradient-btn text-primary-foreground font-semibold px-8 py-3.5 rounded-full text-base inline-flex items-center gap-2"
           >
             <Icon name="CalendarDaysIcon" size={18} className="text-white" />

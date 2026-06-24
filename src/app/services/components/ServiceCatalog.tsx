@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
 import Icon from '@/components/ui/AppIcon';
 
 type Category = 'All' | 'Hair' | 'Skin' | 'Nails' | 'Makeup' | 'Bridal' | 'Spa';
@@ -111,7 +110,11 @@ const categoryColors: Record<Category, string> = {
   Spa: 'bg-blue-50 text-blue-700',
 };
 
-export default function ServiceCatalog() {
+interface ServiceCatalogProps {
+  onBookService?: (serviceName: string) => void;
+}
+
+export default function ServiceCatalog({ onBookService }: ServiceCatalogProps) {
   const [activeCategory, setActiveCategory] = useState<Category>('All');
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -204,13 +207,18 @@ export default function ServiceCatalog() {
                     {service.duration}
                   </p>
                 </div>
-                <Link
-                  href="#booking"
+                <button
+                  type="button"
+                  onClick={() =>
+                    onBookService
+                      ? onBookService(service.title)
+                      : document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })
+                  }
                   className="pink-gradient-btn text-primary-foreground text-xs font-semibold px-4 py-2 rounded-full inline-flex items-center gap-1"
                 >
                   Book
                   <Icon name="ArrowRightIcon" size={12} className="text-white" />
-                </Link>
+                </button>
               </div>
             </div>
           ))}

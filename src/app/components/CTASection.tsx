@@ -1,6 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
 import Icon from '@/components/ui/AppIcon';
+import { getPublicSiteData, getContactLinks } from '@/lib/public-site-data';
+
+const cl = getContactLinks(getPublicSiteData().contact);
 
 export default function CTASection() {
   return (
@@ -25,14 +28,14 @@ export default function CTASection() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/services#booking"
+                href="/book-appointment"
                 className="bg-white text-primary font-semibold px-8 py-3.5 rounded-full inline-flex items-center justify-center gap-2 hover:bg-white/90 transition-colors shadow-lg"
               >
                 <Icon name="CalendarDaysIcon" size={18} className="text-primary" />
                 Book Appointment
               </Link>
               <a
-                href="tel:+919876543210"
+                href={cl.tel}
                 className="border border-white/50 text-white font-semibold px-8 py-3.5 rounded-full inline-flex items-center justify-center gap-2 hover:bg-white/15 transition-colors"
               >
                 <Icon name="PhoneIcon" size={18} className="text-white" />

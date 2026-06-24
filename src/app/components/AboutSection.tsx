@@ -142,7 +142,7 @@ export default function AboutSection() {
             </div>
 
             <Link
-              href="/#about"
+              href="/about"
               className="pink-gradient-btn text-primary-foreground font-semibold px-8 py-3.5 rounded-full inline-flex items-center gap-2"
             >
               Know More About Us

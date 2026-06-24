@@ -5,14 +5,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import AppLogo from '@/components/ui/AppLogo';
 import Icon from '@/components/ui/AppIcon';
+import { getPublicSiteData, getContactLinks } from '@/lib/public-site-data';
 
-const navLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'Services', href: '/services' },
-  { label: 'About', href: '/#about' },
-  { label: 'Gallery', href: '/#gallery' },
-  { label: 'Contact', href: '/#contact' },
-];
+const siteData = getPublicSiteData();
+const navLinks = siteData.navLinks;
+const links = getContactLinks(siteData.contact);
+const brandName = siteData.brand.name;
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -50,7 +48,7 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-2.5 shrink-0" onClick={handleNavClick}>
             <AppLogo size={36} />
             <span className="font-display font-semibold text-lg text-foreground hidden sm:block">
-              Rosé Luxe
+              {brandName}
             </span>
           </Link>
 
@@ -74,14 +72,14 @@ export default function Header() {
           {/* Right Actions */}
           <div className="hidden md:flex items-center gap-3">
             <a
-              href="tel:+919876543210"
+              href={links.tel}
               className="flex items-center justify-center w-9 h-9 rounded-full bg-secondary hover:bg-primary/10 transition-colors"
               aria-label="Call us"
             >
               <Icon name="PhoneIcon" size={16} className="text-primary" />
             </a>
             <a
-              href="https://wa.me/919876543210"
+              href={links.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center w-9 h-9 rounded-full bg-secondary hover:bg-primary/10 transition-colors"
@@ -90,7 +88,7 @@ export default function Header() {
               <Icon name="ChatBubbleLeftRightIcon" size={16} className="text-primary" />
             </a>
             <Link
-              href="/services#booking"
+              href="/book-appointment"
               className="pink-gradient-btn text-primary-foreground text-sm font-semibold px-5 py-2 rounded-full"
             >
               Book Now
@@ -128,7 +126,7 @@ export default function Header() {
             ))}
             <div className="mt-6 flex flex-col gap-3">
               <Link
-                href="/services#booking"
+                href="/book-appointment"
                 onClick={handleNavClick}
                 className="pink-gradient-btn text-primary-foreground text-center font-semibold py-3.5 rounded-2xl text-base"
               >
@@ -136,14 +134,14 @@ export default function Header() {
               </Link>
               <div className="flex gap-3">
                 <a
-                  href="tel:+919876543210"
+                  href={links.tel}
                   className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-secondary text-foreground font-medium text-sm"
                 >
                   <Icon name="PhoneIcon" size={16} className="text-primary" />
                   Call Now
                 </a>
                 <a
-                  href="https://wa.me/919876543210"
+                  href={links.whatsapp}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-secondary text-foreground font-medium text-sm"

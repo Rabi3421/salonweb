@@ -2,39 +2,47 @@ import React from 'react';
 import Link from 'next/link';
 import AppLogo from '@/components/ui/AppLogo';
 import Icon from '@/components/ui/AppIcon';
+import { getPublicSiteData, getContactLinks, formatPhoneDisplay } from '@/lib/public-site-data';
+
+const siteData = getPublicSiteData();
+const brand = siteData.brand;
+const contact = siteData.contact;
+const cLinks = getContactLinks(contact);
 
 const quickLinks = [
   { label: 'Home', href: '/' },
   { label: 'Services', href: '/services' },
-  { label: 'About Us', href: '/#about' },
-  { label: 'Gallery', href: '/#gallery' },
-  { label: 'Book Now', href: '/services#booking' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'Book Now', href: '/book-appointment' },
 ];
 
-const services = [
-  'Hair Styling',
-  'Facial Treatment',
-  'Bridal Makeup',
-  'Nail Art',
-  'Hair Spa',
-  'Manicure & Pedicure',
+const exploreLinks = [
+  { label: 'Our Team', href: '/team' },
+  { label: 'Packages', href: '/packages' },
+  { label: 'Reviews', href: '/reviews' },
+  { label: 'FAQs', href: '/faqs' },
+  { label: 'Contact', href: '/contact' },
+];
+
+const policyLinks = [
+  { label: 'Privacy Policy', href: '/privacy-policy' },
+  { label: 'Terms & Conditions', href: '/terms' },
+  { label: 'Cancellation Policy', href: '/cancellation-policy' },
 ];
 
 export default function Footer() {
   return (
     <footer className="bg-foreground text-primary-foreground/70 pt-16 pb-8 px-4">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/10">
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
               <AppLogo size={36} />
-              <span className="font-display font-semibold text-xl text-white">Rosé Luxe</span>
+              <span className="font-display font-semibold text-xl text-white">{brand.name}</span>
             </div>
-            <p className="text-sm leading-relaxed text-white/50 mb-6">
-              A luxury sanctuary where beauty meets elegance. Premium salon services crafted for
-              modern women in Ahmedabad.
-            </p>
+            <p className="text-sm leading-relaxed text-white/50 mb-6">{brand.shortDescription}</p>
             <div className="flex gap-3">
               {(['instagram', 'facebook', 'youtube'] as const).map((social) => (
                 <a
@@ -78,19 +86,38 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Services */}
+          {/* Explore */}
           <div>
             <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-5">
-              Services
+              Explore
             </h4>
             <ul className="space-y-3">
-              {services.map((service) => (
-                <li key={service}>
+              {exploreLinks.map((link) => (
+                <li key={link.label}>
                   <Link
-                    href="/services"
+                    href={link.href}
                     className="text-sm text-white/50 hover:text-primary transition-colors"
                   >
-                    {service}
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Policies */}
+          <div>
+            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-5">
+              Policies
+            </h4>
+            <ul className="space-y-3">
+              {policyLinks.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-white/50 hover:text-primary transition-colors"
+                  >
+                    {link.label}
                   </Link>
                 </li>
               ))}
@@ -105,18 +132,16 @@ export default function Footer() {
             <div className="space-y-4">
               <div className="flex items-start gap-3">
                 <Icon name="MapPinIcon" size={16} className="text-primary mt-0.5 shrink-0" />
-                <p className="text-sm text-white/50">
-                  14 Sindhu Bhavan Road, Bodakdev, Ahmedabad, Gujarat 380054
-                </p>
+                <p className="text-sm text-white/50">{contact.address}</p>
               </div>
-              <a href="tel:+919876543210" className="flex items-center gap-3 group">
+              <a href={cLinks.tel} className="flex items-center gap-3 group">
                 <Icon name="PhoneIcon" size={16} className="text-primary shrink-0" />
                 <span className="text-sm text-white/50 group-hover:text-primary transition-colors">
-                  +91 98765 43210
+                  {formatPhoneDisplay(contact.phone)}
                 </span>
               </a>
               <a
-                href="https://wa.me/919876543210"
+                href={cLinks.whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 group"
@@ -126,17 +151,20 @@ export default function Footer() {
                   WhatsApp Us
                 </span>
               </a>
-              <a href="mailto:hello@roseluxe.in" className="flex items-center gap-3 group">
+              <a href={cLinks.mailto} className="flex items-center gap-3 group">
                 <Icon name="EnvelopeIcon" size={16} className="text-primary shrink-0" />
                 <span className="text-sm text-white/50 group-hover:text-primary transition-colors">
-                  hello@roseluxe.in
+                  {contact.email}
                 </span>
               </a>
               <div className="flex items-start gap-3">
                 <Icon name="ClockIcon" size={16} className="text-primary mt-0.5 shrink-0" />
                 <div>
-                  <p className="text-sm text-white/50">Mon–Sat: 9:00 AM – 8:00 PM</p>
-                  <p className="text-sm text-white/50">Sunday: 10:00 AM – 6:00 PM</p>
+                  {contact.openingHours.map((h, i) => (
+                    <p key={i} className="text-sm text-white/50">
+                      {h}
+                    </p>
+                  ))}
                 </div>
               </div>
             </div>
@@ -145,13 +173,18 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/30">
-          <p>© 2026 Rosé Luxe Salon. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} {brand.fullName}. All rights reserved.
+          </p>
           <div className="flex gap-6">
-            <Link href="#" className="hover:text-primary transition-colors">
+            <Link href="/privacy-policy" className="hover:text-primary transition-colors">
               Privacy Policy
             </Link>
-            <Link href="#" className="hover:text-primary transition-colors">
-              Terms of Service
+            <Link href="/terms" className="hover:text-primary transition-colors">
+              Terms
+            </Link>
+            <Link href="/cancellation-policy" className="hover:text-primary transition-colors">
+              Cancellation
             </Link>
           </div>
         </div>

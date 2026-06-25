@@ -4,8 +4,9 @@ import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 
-const stats = [
+const fallbackStats = [
   { value: '10+', label: 'Years Experience' },
   { value: '15+', label: 'Awards Won' },
   { value: '20+', label: 'Expert Stylists' },
@@ -13,8 +14,17 @@ const stats = [
 ];
 
 export default function AboutSection() {
+  const { about, brand } = usePublicSiteData();
   const leftRef = useRef<HTMLDivElement>(null);
   const rightRef = useRef<HTMLDivElement>(null);
+  const stats = about.stats.length > 0 ? about.stats : fallbackStats;
+  const paragraphs =
+    about.paragraphs.length > 0
+      ? about.paragraphs
+      : [
+          `${brand.fullName} is built around thoughtful salon care, skilled service, and a welcoming client experience.`,
+          'Our trained team brings hair, skin, nail, and beauty services together with careful consultation and attention to detail.',
+        ];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -113,18 +123,18 @@ export default function AboutSection() {
               About Us
             </span>
             <h2 className="font-display text-section-title text-foreground font-light mb-6">
-              Crafting Beauty <span className="italic text-primary">Since 2014</span>
+              {about.title || 'Crafting Beauty'}
             </h2>
-            <p className="text-muted-foreground text-base leading-relaxed mb-4">
-              At Rosé Luxe, we believe every woman deserves to feel beautiful and confident. Our
-              journey began with a simple vision — to create a sanctuary where luxury meets comfort,
-              and beauty is celebrated in all its forms.
-            </p>
-            <p className="text-muted-foreground text-base leading-relaxed mb-8">
-              With trained stylists and aesthetic experts, we bring premium hair, skin, nail, and
-              bridal services with meticulous attention to detail that makes every visit
-              unforgettable.
-            </p>
+            {paragraphs.slice(0, 2).map((paragraph, index) => (
+              <p
+                key={paragraph}
+                className={`text-muted-foreground text-base leading-relaxed ${
+                  index === Math.min(paragraphs.length, 2) - 1 ? 'mb-8' : 'mb-4'
+                }`}
+              >
+                {paragraph}
+              </p>
+            ))}
 
             {/* Stats */}
             <div className="grid grid-cols-2 gap-4 mb-8">

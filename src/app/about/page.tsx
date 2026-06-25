@@ -14,9 +14,9 @@ import TeamPreview from './components/TeamPreview';
 import AboutCTA from './components/AboutCTA';
 
 export const metadata = buildPageMetadata({
-  title: 'About Rosé Luxe Salon',
+  title: 'About The Salon',
   description:
-    'Learn about Rosé Luxe Salon, our story, expert stylists, hygiene promise, premium products and luxury beauty experience.',
+    'Learn about the salon, our story, expert stylists, hygiene promise, premium products and beauty experience.',
   path: '/about',
 });
 

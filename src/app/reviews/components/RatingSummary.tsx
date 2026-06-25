@@ -1,17 +1,23 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import Icon from '@/components/ui/AppIcon';
 
-const stats = [
-  { value: '4.9/5', label: 'Average Rating', icon: 'StarIcon' as const },
-  { value: '6000+', label: 'Happy Clients', icon: 'UserGroupIcon' as const },
-  { value: '1200+', label: 'Verified Reviews', icon: 'ChatBubbleLeftRightIcon' as const },
-  { value: '98%', label: 'Client Satisfaction', icon: 'HeartIcon' as const },
-];
-
 export default function RatingSummary() {
+  const { brand, reviews } = usePublicSiteData();
   const ref = useRef<HTMLDivElement>(null);
+  const stats = [
+    { value: `${brand.rating || '4.9'}/5`, label: 'Average Rating', icon: 'StarIcon' },
+    { value: brand.happyClients || 'Happy Clients', label: 'Happy Clients', icon: 'UserGroupIcon' },
+    {
+      value: reviews.length > 0 ? `${reviews.length}+` : 'Verified',
+      label: 'Verified Reviews',
+      icon: 'ChatBubbleLeftRightIcon',
+    },
+    { value: '98%', label: 'Client Satisfaction', icon: 'HeartIcon' },
+  ];
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;

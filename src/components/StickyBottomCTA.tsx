@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import Icon from '@/components/ui/AppIcon';
-import { getPublicSiteData, getContactLinks } from '@/lib/public-site-data';
-
-const contactLinks = getContactLinks(getPublicSiteData().contact);
+import { getContactLinks } from '@/lib/public-site-data';
 
 export default function StickyBottomCTA() {
+  const siteData = usePublicSiteData();
+  const contactLinks = getContactLinks(siteData.contact);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

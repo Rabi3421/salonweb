@@ -3,7 +3,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import JsonLd from '@/components/JsonLd';
 import StickyBottomCTA from '@/components/StickyBottomCTA';
-import { getPublicSiteData } from '@/lib/public-site-data';
+import { getPublicSiteDataAsync } from '@/lib/public-site-data';
 import { buildPageMetadata } from '@/lib/seo';
 import { buildBeautySalonSchema, buildBreadcrumbSchema } from '@/lib/structured-data';
 import ContactHero from './components/ContactHero';
@@ -13,14 +13,14 @@ import LocationHours from './components/LocationHours';
 import ContactCTA from './components/ContactCTA';
 
 export const metadata = buildPageMetadata({
-  title: 'Contact Rosé Luxe Salon',
+  title: 'Contact The Salon',
   description:
-    'Contact Rosé Luxe Salon by call, WhatsApp, email or visit us for premium beauty services and appointment enquiries.',
+    'Contact the salon by call, WhatsApp, email or visit us for beauty services and appointment enquiries.',
   path: '/contact',
 });
 
-export default function ContactPage() {
-  const data = getPublicSiteData();
+export default async function ContactPage() {
+  const data = await getPublicSiteDataAsync();
 
   return (
     <>

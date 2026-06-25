@@ -3,7 +3,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import JsonLd from '@/components/JsonLd';
 import StickyBottomCTA from '@/components/StickyBottomCTA';
-import { getPublicSiteData } from '@/lib/public-site-data';
+import { getPublicSiteDataAsync } from '@/lib/public-site-data';
 import { buildPageMetadata } from '@/lib/seo';
 import { buildBeautySalonSchema, buildBreadcrumbSchema } from '@/lib/structured-data';
 import ReviewsHero from './components/ReviewsHero';
@@ -14,12 +14,12 @@ import ReviewsCTA from './components/ReviewsCTA';
 export const metadata = buildPageMetadata({
   title: 'Client Reviews',
   description:
-    'Read client reviews and testimonials for Rosé Luxe Salon, trusted for premium hair, skin, nails, makeup and bridal beauty services.',
+    'Read client reviews and testimonials for hair, skin, nails, makeup and bridal beauty services.',
   path: '/reviews',
 });
 
-export default function ReviewsPage() {
-  const data = getPublicSiteData();
+export default async function ReviewsPage() {
+  const data = await getPublicSiteDataAsync();
 
   return (
     <>

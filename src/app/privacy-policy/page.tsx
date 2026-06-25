@@ -6,7 +6,7 @@ import { buildBreadcrumbSchema } from '@/lib/structured-data';
 export const metadata = buildPageMetadata({
   title: 'Privacy Policy',
   description:
-    'Read the privacy policy for Rosé Luxe Salon website, contact forms and appointment enquiry handling.',
+    'Read the privacy policy for the salon website, contact forms and appointment enquiry handling.',
   path: '/privacy-policy',
 });
 
@@ -14,7 +14,7 @@ const sections = [
   {
     title: 'Introduction',
     content:
-      'Rosé Luxe Salon respects your privacy and is committed to handling your personal information carefully. This policy explains how we collect, use, and protect the data you share with us through our website and appointment enquiry system.',
+      'The salon respects your privacy and is committed to handling your personal information carefully. This policy explains how we collect, use, and protect the data you share with us through our website and appointment enquiry system.',
   },
   {
     title: 'Information We Collect',

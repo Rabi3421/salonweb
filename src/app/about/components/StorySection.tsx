@@ -2,11 +2,20 @@
 
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
 
 export default function StorySection() {
+  const { brand, about } = usePublicSiteData();
   const sectionRef = useRef<HTMLDivElement>(null);
+  const paragraphs =
+    about.paragraphs.length > 0
+      ? about.paragraphs
+      : [
+          `${brand.fullName} was created as a calm, thoughtful space where every client feels cared for and confident.`,
+          'Our team combines modern styling techniques, hygiene practices, and personalized consultation for reliable salon experiences.',
+        ];
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -42,7 +51,7 @@ export default function StorySection() {
           <div className="row-span-2 rounded-4xl overflow-hidden shadow-lg">
             <AppImage
               src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&q=80"
-              alt="Luxury Rosé Luxe salon interior with modern styling chairs"
+              alt={`${brand.fullName} salon interior with modern styling chairs`}
               width={400}
               height={500}
               className="w-full h-full object-cover"
@@ -82,16 +91,16 @@ export default function StorySection() {
           <h2 className="font-display text-section-title text-foreground font-light mb-6">
             A Salon Experience <span className="italic text-primary">Designed Around You</span>
           </h2>
-          <p className="text-muted-foreground text-base leading-relaxed mb-4">
-            At Rosé Luxe, beauty is not just a service — it is an experience. We created a calm,
-            premium space where every client feels confident, cared for, and beautifully
-            transformed.
-          </p>
-          <p className="text-muted-foreground text-base leading-relaxed mb-8">
-            Our team combines modern styling techniques, premium products, strict hygiene practices,
-            and personalized consultation to deliver salon experiences that feel luxurious and
-            reliable.
-          </p>
+          {paragraphs.slice(0, 2).map((paragraph, index) => (
+            <p
+              key={paragraph}
+              className={`text-muted-foreground text-base leading-relaxed ${
+                index === Math.min(paragraphs.length, 2) - 1 ? 'mb-8' : 'mb-4'
+              }`}
+            >
+              {paragraph}
+            </p>
+          ))}
           <Link
             href="/services#booking"
             className="pink-gradient-btn text-primary-foreground font-semibold px-8 py-3.5 rounded-full inline-flex items-center gap-2"

@@ -3,9 +3,10 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import JsonLd from '@/components/JsonLd';
 import StickyBottomCTA from '@/components/StickyBottomCTA';
-import { getPublicSiteData } from '@/lib/public-site-data';
+import { getPublicSiteDataAsync } from '@/lib/public-site-data';
 import { buildPageMetadata } from '@/lib/seo';
 import { buildBeautySalonSchema, buildBreadcrumbSchema } from '@/lib/structured-data';
+import type { Metadata } from 'next';
 import HeroSection from './components/HeroSection';
 import ServicesPreview from './components/ServicesPreview';
 import WhyChooseUs from './components/WhyChooseUs';
@@ -14,15 +15,21 @@ import GallerySection from './components/GallerySection';
 import TestimonialsSection from './components/TestimonialsSection';
 import CTASection from './components/CTASection';
 
-export const metadata = buildPageMetadata({
-  title: 'Rosé Luxe Salon | Premium Beauty Salon in Ahmedabad',
-  description:
-    'Experience premium salon services including hair styling, facial treatments, nail art, bridal makeup and beauty packages at Rosé Luxe Salon in Ahmedabad.',
-  path: '/',
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await getPublicSiteDataAsync();
+  const location = data.brand.location || data.contact.city || 'your city';
 
-export default function HomePage() {
-  const data = getPublicSiteData();
+  return buildPageMetadata({
+    title: `${data.brand.fullName} | Premium Beauty Salon in ${location}`,
+    description:
+      data.brand.shortDescription ||
+      `Experience salon services, beauty packages, and appointments at ${data.brand.fullName}.`,
+    path: '/',
+  });
+}
+
+export default async function HomePage() {
+  const data = await getPublicSiteDataAsync();
 
   return (
     <>

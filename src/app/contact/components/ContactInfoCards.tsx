@@ -1,44 +1,43 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import Icon from '@/components/ui/AppIcon';
-import { getPublicSiteData, getContactLinks, formatPhoneDisplay } from '@/lib/public-site-data';
-
-const sd = getPublicSiteData();
-const cl = getContactLinks(sd.contact);
-
-const contactItems = [
-  {
-    icon: 'PhoneIcon' as const,
-    title: 'Call Us',
-    detail: formatPhoneDisplay(sd.contact.phone),
-    href: cl.tel,
-    action: 'Call Now',
-  },
-  {
-    icon: 'ChatBubbleLeftRightIcon' as const,
-    title: 'WhatsApp',
-    detail: 'Chat with our team',
-    href: cl.whatsapp,
-    action: 'Open Chat',
-  },
-  {
-    icon: 'EnvelopeIcon' as const,
-    title: 'Email',
-    detail: sd.contact.email,
-    href: cl.mailto,
-    action: 'Send Email',
-  },
-  {
-    icon: 'MapPinIcon' as const,
-    title: 'Visit Salon',
-    detail: sd.contact.address,
-    href: undefined,
-    action: undefined,
-  },
-];
+import { getContactLinks, formatPhoneDisplay } from '@/lib/public-site-data';
 
 export default function ContactInfoCards() {
+  const sd = usePublicSiteData();
+  const cl = getContactLinks(sd.contact);
+  const contactItems = [
+    {
+      icon: 'PhoneIcon' as const,
+      title: 'Call Us',
+      detail: formatPhoneDisplay(sd.contact.phone),
+      href: cl.tel,
+      action: 'Call Now',
+    },
+    {
+      icon: 'ChatBubbleLeftRightIcon' as const,
+      title: 'WhatsApp',
+      detail: 'Chat with our team',
+      href: cl.whatsapp,
+      action: 'Open Chat',
+    },
+    {
+      icon: 'EnvelopeIcon' as const,
+      title: 'Email',
+      detail: sd.contact.email,
+      href: cl.mailto,
+      action: 'Send Email',
+    },
+    {
+      icon: 'MapPinIcon' as const,
+      title: 'Visit Salon',
+      detail: sd.contact.address,
+      href: undefined,
+      action: undefined,
+    },
+  ];
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {

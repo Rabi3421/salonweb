@@ -1,16 +1,17 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import Icon from '@/components/ui/AppIcon';
 
-type Category = 'All' | 'Hair' | 'Skin' | 'Nails' | 'Makeup' | 'Bridal' | 'Spa';
+type Category = string;
 
-const categories: Category[] = ['All', 'Hair', 'Skin', 'Nails', 'Makeup', 'Bridal', 'Spa'];
+const fallbackCategories: Category[] = ['All', 'Hair', 'Skin', 'Nails', 'Makeup', 'Bridal', 'Spa'];
 
-const allServices = [
+const fallbackServices = [
   {
     title: 'Hair Styling',
-    category: 'Hair' as Category,
+    category: 'Hair',
     price: 'From ₹1,500',
     duration: '45–60 min',
     description: 'Elegant styling, curls, blow dry, smooth finish for everyday or event looks.',
@@ -19,7 +20,7 @@ const allServices = [
   },
   {
     title: 'Hair Spa',
-    category: 'Hair' as Category,
+    category: 'Hair',
     price: 'From ₹2,500',
     duration: '60 min',
     description: 'Deep nourishment therapy to restore shine, softness and scalp health.',
@@ -28,7 +29,7 @@ const allServices = [
   },
   {
     title: 'Hair Color',
-    category: 'Hair' as Category,
+    category: 'Hair',
     price: 'From ₹3,500',
     duration: '90–150 min',
     description: 'Premium coloring, highlights, global color and expert consultation.',
@@ -37,7 +38,7 @@ const allServices = [
   },
   {
     title: 'Facial Treatment',
-    category: 'Skin' as Category,
+    category: 'Skin',
     price: 'From ₹2,000',
     duration: '60 min',
     description: 'Skin-focused facial using premium products for glow and hydration.',
@@ -46,7 +47,7 @@ const allServices = [
   },
   {
     title: 'Cleanup',
-    category: 'Skin' as Category,
+    category: 'Skin',
     price: 'From ₹1,200',
     duration: '35 min',
     description: 'Quick skin refresh with cleansing, exfoliation and soothing care.',
@@ -55,7 +56,7 @@ const allServices = [
   },
   {
     title: 'Manicure & Pedicure',
-    category: 'Nails' as Category,
+    category: 'Nails',
     price: 'From ₹800',
     duration: '45 min',
     description: 'Relaxing hand and foot care with shaping, cleaning and polish.',
@@ -64,7 +65,7 @@ const allServices = [
   },
   {
     title: 'Nail Art',
-    category: 'Nails' as Category,
+    category: 'Nails',
     price: 'From ₹1,200',
     duration: '60 min',
     description: 'Trendy nail designs with premium finish and long-lasting shine.',
@@ -73,7 +74,7 @@ const allServices = [
   },
   {
     title: 'Bridal Makeup',
-    category: 'Bridal' as Category,
+    category: 'Bridal',
     price: 'From ₹12,000',
     duration: '180 min',
     description: 'Complete bridal look with consultation, makeup, hair styling and draping.',
@@ -82,7 +83,7 @@ const allServices = [
   },
   {
     title: 'Party Makeup',
-    category: 'Makeup' as Category,
+    category: 'Makeup',
     price: 'From ₹4,000',
     duration: '90 min',
     description: 'Glamorous event-ready makeup for parties, functions and celebrations.',
@@ -91,7 +92,7 @@ const allServices = [
   },
   {
     title: 'Waxing & Threading',
-    category: 'Spa' as Category,
+    category: 'Spa',
     price: 'From ₹500',
     duration: '30 min',
     description: 'Hygienic grooming services with gentle care and clean finish.',
@@ -110,13 +111,44 @@ const categoryColors: Record<Category, string> = {
   Spa: 'bg-blue-50 text-blue-700',
 };
 
+function getCategoryColor(category: string) {
+  return categoryColors[category] ?? 'bg-secondary text-primary';
+}
+
+function getServiceIcon(category: string) {
+  const normalized = category.toLowerCase();
+  if (normalized.includes('hair')) return 'ScissorsIcon';
+  if (normalized.includes('skin') || normalized.includes('facial')) return 'SparklesIcon';
+  if (normalized.includes('nail')) return 'PaintBrushIcon';
+  if (normalized.includes('bridal') || normalized.includes('makeup')) return 'HeartIcon';
+  if (normalized.includes('spa')) return 'BeakerIcon';
+  return 'SparklesIcon';
+}
+
 interface ServiceCatalogProps {
   onBookService?: (serviceName: string) => void;
 }
 
 export default function ServiceCatalog({ onBookService }: ServiceCatalogProps) {
+  const siteData = usePublicSiteData();
   const [activeCategory, setActiveCategory] = useState<Category>('All');
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const allServices =
+    siteData.services.length > 0
+      ? siteData.services.map((service) => ({
+          title: service.title,
+          category: service.category,
+          price: service.price,
+          duration: service.duration,
+          description: service.description,
+          icon: getServiceIcon(service.category),
+          popular: Boolean(service.featured),
+        }))
+      : fallbackServices;
+  const categories =
+    siteData.serviceCategories.length > 0
+      ? ['All', ...siteData.serviceCategories.filter((category) => category !== 'All')]
+      : fallbackCategories;
 
   const filtered =
     activeCategory === 'All'
@@ -180,7 +212,7 @@ export default function ServiceCatalog({ onBookService }: ServiceCatalogProps) {
                       {service.title}
                     </h3>
                     <span
-                      className={`inline-block mt-1 text-xs font-semibold px-2 py-0.5 rounded-full ${categoryColors[service.category]}`}
+                      className={`inline-block mt-1 text-xs font-semibold px-2 py-0.5 rounded-full ${getCategoryColor(service.category)}`}
                     >
                       {service.category}
                     </span>

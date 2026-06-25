@@ -1,7 +1,17 @@
 import { imageHosts } from './image-hosts.config.mjs';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: '/api/salon/:path*',
+        destination: `${API_BASE}/api/salon/:path*`,
+      },
+    ];
+  },
   productionBrowserSourceMaps: true,
   distDir: process.env.DIST_DIR || '.next',
   typescript: {

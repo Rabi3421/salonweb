@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import Icon from '@/components/ui/AppIcon';
 
 export default function ReviewsHero() {
+  const { brand } = usePublicSiteData();
   const headRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = headRef.current;
@@ -34,7 +36,7 @@ export default function ReviewsHero() {
           Real Stories From <span className="italic text-primary">Happy Clients</span>
         </h1>
         <p className="text-muted-foreground text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto mt-6">
-          From bridal transformations to everyday self-care, our clients trust Rosé Luxe for premium
+          From bridal transformations to everyday self-care, our clients trust {brand.name} for
           beauty experiences that feel personal, elegant, and reliable.
         </p>
       </div>

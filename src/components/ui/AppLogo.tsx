@@ -7,6 +7,7 @@ import AppImage from './AppImage';
 interface AppLogoProps {
   src?: string; // Image source (optional)
   iconName?: string; // Icon name when no image
+  alt?: string;
   size?: number; // Size for icon/image
   className?: string; // Additional classes
   onClick?: () => void; // Click handler
@@ -15,6 +16,7 @@ interface AppLogoProps {
 const AppLogo = memo(function AppLogo({
   src = '/assets/images/app_logo.png',
   iconName = 'SparklesIcon',
+  alt = 'Salon logo',
   size = 64,
   className = '',
   onClick,
@@ -33,7 +35,7 @@ const AppLogo = memo(function AppLogo({
       {src ? (
         <AppImage
           src={src}
-          alt="Rosé Luxe Salon logo"
+          alt={alt}
           width={size}
           height={size}
           className="flex-shrink-0"

@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import Icon from '@/components/ui/AppIcon';
 
 export default function AboutHero() {
+  const { brand, about } = usePublicSiteData();
   const headRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,14 +33,14 @@ export default function AboutHero() {
       <div ref={headRef} className="relative z-10 max-w-3xl mx-auto text-center">
         <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary border border-border text-primary text-xs font-bold tracking-widest uppercase mb-6">
           <Icon name="SparklesIcon" size={13} className="text-primary" />
-          About Rosé Luxe
+          About {brand.name}
         </span>
         <h1 className="font-display text-hero text-foreground font-light">
-          Crafting Beauty <span className="italic text-primary">Since 2014</span>
+          {about.title || 'Crafting Beauty'}
         </h1>
         <p className="text-muted-foreground text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto mt-6">
-          A premium beauty destination where expert styling, luxury care, and personal confidence
-          come together.
+          {brand.shortDescription ||
+            'A beauty destination where expert styling, care, and personal confidence come together.'}
         </p>
       </div>
     </section>

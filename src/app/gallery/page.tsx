@@ -14,7 +14,7 @@ import GalleryCTA from './components/GalleryCTA';
 export const metadata = buildPageMetadata({
   title: 'Gallery | Beauty Transformations',
   description:
-    'Explore salon interiors, bridal makeup, hair styling, nail art, facial care and premium beauty transformations from Rosé Luxe Salon.',
+    'Explore salon interiors, bridal makeup, hair styling, nail art, facial care and beauty transformations.',
   path: '/gallery',
 });
 

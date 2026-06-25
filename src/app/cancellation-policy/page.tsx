@@ -6,7 +6,7 @@ import { buildBreadcrumbSchema } from '@/lib/structured-data';
 export const metadata = buildPageMetadata({
   title: 'Cancellation Policy',
   description:
-    'Read appointment cancellation, rescheduling, late arrival and package booking policy for Rosé Luxe Salon.',
+    'Read appointment cancellation, rescheduling, late arrival and package booking policy for the salon.',
   path: '/cancellation-policy',
 });
 

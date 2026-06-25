@@ -1,11 +1,14 @@
-import React from 'react';
-import Icon from '@/components/ui/AppIcon';
-import { getPublicSiteData, getContactLinks, formatPhoneDisplay } from '@/lib/public-site-data';
+'use client';
 
-const sd = getPublicSiteData();
-const cl = getContactLinks(sd.contact);
+import React from 'react';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
+import Icon from '@/components/ui/AppIcon';
+import { getContactLinks, formatPhoneDisplay } from '@/lib/public-site-data';
 
 export default function LocationHours() {
+  const sd = usePublicSiteData();
+  const cl = getContactLinks(sd.contact);
+
   return (
     <section className="section-padding px-4 bg-background">
       <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">

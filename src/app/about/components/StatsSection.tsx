@@ -1,16 +1,19 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 
-const stats = [
+const fallbackStats = [
   { value: '10+', label: 'Years Experience' },
   { value: '20+', label: 'Expert Stylists' },
-  { value: '6000+', label: 'Happy Clients' },
+  { value: '5K+', label: 'Happy Clients' },
   { value: '15+', label: 'Awards Won' },
 ];
 
 export default function StatsSection() {
+  const { about } = usePublicSiteData();
   const ref = useRef<HTMLDivElement>(null);
+  const stats = about.stats.length > 0 ? about.stats : fallbackStats;
 
   useEffect(() => {
     const el = ref.current;

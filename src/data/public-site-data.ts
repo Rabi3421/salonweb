@@ -2,26 +2,25 @@ import type { PublicSiteData } from '@/types/public-site';
 
 export const fallbackPublicSiteData: PublicSiteData = {
   brand: {
-    name: 'Rosé Luxe',
-    fullName: 'Rosé Luxe Salon',
-    tagline: 'Premium Salon Experience For Modern Women',
-    shortDescription:
-      'A luxury sanctuary where beauty meets elegance. Premium salon services crafted for modern women.',
-    logoText: 'Rosé Luxe',
+    name: 'Salon',
+    fullName: 'Salon',
+    tagline: 'Welcome to the salon',
+    shortDescription: 'Beauty services, packages, and appointments managed by the salon team.',
+    logoText: 'Salon',
     rating: '4.9',
-    happyClients: '6000+',
-    location: 'Ahmedabad',
+    happyClients: 'Clients',
+    location: '',
   },
 
   contact: {
-    phone: '+919876543210',
-    whatsapp: '919876543210',
-    email: 'hello@roseluxe.in',
-    address: '14 Sindhu Bhavan Road, Bodakdev, Ahmedabad, Gujarat 380054',
-    city: 'Ahmedabad',
-    state: 'Gujarat',
+    phone: '',
+    whatsapp: '',
+    email: '',
+    address: '',
+    city: '',
+    state: '',
     openingHours: ['Mon–Sat: 9:00 AM – 8:00 PM', 'Sunday: 10:00 AM – 6:00 PM'],
-    mapLabel: 'Rosé Luxe Salon, Ahmedabad',
+    mapLabel: 'Salon',
   },
 
   navLinks: [
@@ -147,15 +146,15 @@ export const fallbackPublicSiteData: PublicSiteData = {
   ],
 
   about: {
-    title: 'Crafting Beauty Since 2014',
+    title: 'Crafting Beauty With Care',
     paragraphs: [
-      'At Rosé Luxe, beauty is not just a service — it is an experience. We created a calm, premium space where every client feels confident, cared for, and beautifully transformed.',
+      'Beauty is not just a service — it is an experience. The salon team creates a calm space where every client feels confident, cared for, and beautifully transformed.',
       'Our team combines modern styling techniques, premium products, strict hygiene practices, and personalized consultation to deliver salon experiences that feel luxurious and reliable.',
     ],
     stats: [
       { value: '10+', label: 'Years Experience' },
       { value: '20+', label: 'Expert Stylists' },
-      { value: '6000+', label: 'Happy Clients' },
+      { value: '5K+', label: 'Happy Clients' },
       { value: '15+', label: 'Awards Won' },
     ],
   },
@@ -478,7 +477,7 @@ export const fallbackPublicSiteData: PublicSiteData = {
         {
           title: 'Introduction',
           content:
-            'Rosé Luxe Salon respects your privacy and is committed to handling your personal information carefully.',
+            'The salon respects your privacy and is committed to handling your personal information carefully.',
         },
         {
           title: 'Information We Collect',

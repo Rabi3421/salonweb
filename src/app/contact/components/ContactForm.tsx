@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import Icon from '@/components/ui/AppIcon';
 import { createSalonEnquiry } from '@/lib/salon-api';
-import { getPublicSiteData, getContactLinks, formatPhoneDisplay } from '@/lib/public-site-data';
-
-const siteData = getPublicSiteData();
-const cLinks = getContactLinks(siteData.contact);
-const phoneDisplay = formatPhoneDisplay(siteData.contact.phone);
+import { getContactLinks, formatPhoneDisplay } from '@/lib/public-site-data';
 
 export default function ContactForm() {
+  const siteData = usePublicSiteData();
+  const cLinks = getContactLinks(siteData.contact);
+  const phoneDisplay = formatPhoneDisplay(siteData.contact.phone);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',

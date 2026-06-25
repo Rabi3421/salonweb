@@ -4,8 +4,9 @@ import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 
-const services = [
+const fallbackServices = [
   {
     title: 'Hair Styling',
     price: 'From ₹1,500',
@@ -57,9 +58,31 @@ const services = [
   },
 ];
 
+function getServiceIcon(category: string) {
+  const normalized = category.toLowerCase();
+  if (normalized.includes('hair')) return 'ScissorsIcon';
+  if (normalized.includes('skin') || normalized.includes('facial')) return 'SparklesIcon';
+  if (normalized.includes('nail')) return 'PaintBrushIcon';
+  if (normalized.includes('bridal') || normalized.includes('makeup')) return 'HeartIcon';
+  if (normalized.includes('spa')) return 'BeakerIcon';
+  return 'SparklesIcon';
+}
+
 export default function ServicesPreview() {
-  const sectionRef = useRef<HTMLElement>(null);
+  const siteData = usePublicSiteData();
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const services = (
+    siteData.services.length > 0
+      ? siteData.services.map((service) => ({
+          title: service.title,
+          price: service.price,
+          description: service.description,
+          image: service.image || 'https://images.unsplash.com/photo-1560066984-138dadb4c035',
+          alt: `${service.title} service at ${siteData.brand.fullName}`,
+          icon: getServiceIcon(service.category),
+        }))
+      : fallbackServices
+  ).slice(0, 6);
 
   useEffect(() => {
     const observer = new IntersectionObserver(

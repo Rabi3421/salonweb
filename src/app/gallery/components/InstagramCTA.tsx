@@ -1,8 +1,13 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import Icon from '@/components/ui/AppIcon';
 
 export default function InstagramCTA() {
+  const { brand } = usePublicSiteData();
+
   return (
     <section className="section-padding px-4 bg-background">
       <div className="max-w-4xl mx-auto">
@@ -18,7 +23,7 @@ export default function InstagramCTA() {
               See More Looks & <span className="italic text-primary">Transformations</span>
             </h2>
             <p className="text-muted-foreground text-base max-w-xl mx-auto mb-8 leading-relaxed">
-              Follow Rosé Luxe for fresh beauty inspiration, bridal looks, styling ideas, and
+              Follow {brand.name} for fresh beauty inspiration, bridal looks, styling ideas, and
               behind-the-scenes salon moments.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">

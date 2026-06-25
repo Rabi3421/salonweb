@@ -14,7 +14,7 @@ import TeamCTA from './components/TeamCTA';
 export const metadata = buildPageMetadata({
   title: 'Our Expert Team',
   description:
-    'Meet the expert hair stylists, bridal makeup artists, nail artists and beauty specialists at Rosé Luxe Salon.',
+    'Meet the expert hair stylists, bridal makeup artists, nail artists and beauty specialists at the salon.',
   path: '/team',
 });
 

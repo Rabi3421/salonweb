@@ -1,11 +1,15 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Icon from '@/components/ui/AppIcon';
-import { getPublicSiteData, getContactLinks } from '@/lib/public-site-data';
-
-const cl = getContactLinks(getPublicSiteData().contact);
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
+import { getContactLinks } from '@/lib/public-site-data';
 
 export default function CTASection() {
+  const siteData = usePublicSiteData();
+  const cl = getContactLinks(siteData.contact);
+
   return (
     <section id="contact" className="px-4 py-20 bg-secondary/30">
       <div className="max-w-4xl mx-auto">

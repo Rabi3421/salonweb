@@ -1,4 +1,4 @@
-import { API_BASE_URL, SALON_ID } from '@/lib/env';
+import { SALON_ID } from '@/lib/env';
 
 export type ApiResponse<T = unknown> = {
   success: boolean;
@@ -6,10 +6,34 @@ export type ApiResponse<T = unknown> = {
   data?: T;
 };
 
-async function request<T = unknown>(path: string, options?: RequestInit): Promise<ApiResponse<T>> {
-  const url = `${API_BASE_URL}${path}`;
+let refreshPromise: Promise<boolean> | null = null;
 
-  const res = await fetch(url, {
+async function tryRefreshToken(): Promise<boolean> {
+  if (refreshPromise) return refreshPromise;
+
+  refreshPromise = (async () => {
+    try {
+      const res = await fetch('/api/salon/auth/refresh', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-salon-id': SALON_ID,
+        },
+      });
+      return res.ok;
+    } catch {
+      return false;
+    } finally {
+      refreshPromise = null;
+    }
+  })();
+
+  return refreshPromise;
+}
+
+function buildFetchOptions(options?: RequestInit): RequestInit {
+  return {
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
@@ -17,7 +41,27 @@ async function request<T = unknown>(path: string, options?: RequestInit): Promis
       ...options?.headers,
     },
     ...options,
-  });
+  };
+}
+
+async function request<T = unknown>(path: string, options?: RequestInit): Promise<ApiResponse<T>> {
+  let res: Response;
+  try {
+    res = await fetch(path, buildFetchOptions(options));
+  } catch {
+    throw new Error('Unable to connect to server.');
+  }
+
+  if (res.status === 401 && !path.includes('/auth/login')) {
+    const refreshed = await tryRefreshToken();
+    if (refreshed) {
+      try {
+        res = await fetch(path, buildFetchOptions(options));
+      } catch {
+        throw new Error('Unable to connect to server.');
+      }
+    }
+  }
 
   const json = (await res.json()) as ApiResponse<T>;
 

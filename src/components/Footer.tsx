@@ -1,13 +1,11 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import AppLogo from '@/components/ui/AppLogo';
 import Icon from '@/components/ui/AppIcon';
-import { getPublicSiteData, getContactLinks, formatPhoneDisplay } from '@/lib/public-site-data';
-
-const siteData = getPublicSiteData();
-const brand = siteData.brand;
-const contact = siteData.contact;
-const cLinks = getContactLinks(contact);
+import { getContactLinks, formatPhoneDisplay } from '@/lib/public-site-data';
 
 const quickLinks = [
   { label: 'Home', href: '/' },
@@ -32,6 +30,11 @@ const policyLinks = [
 ];
 
 export default function Footer() {
+  const siteData = usePublicSiteData();
+  const brand = siteData.brand;
+  const contact = siteData.contact;
+  const cLinks = getContactLinks(contact);
+
   return (
     <footer className="bg-foreground text-primary-foreground/70 pt-16 pb-8 px-4">
       <div className="max-w-6xl mx-auto">

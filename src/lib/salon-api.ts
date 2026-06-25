@@ -16,3 +16,23 @@ export function createSalonEnquiry(payload: SalonEnquiryPayload) {
 export function createPlatformEnquiry(payload: SalonEnquiryPayload) {
   return apiPost<{ enquiryId: string }>('/api/enquiries', payload);
 }
+
+export type PublicAppointmentPayload = {
+  customerName: string;
+  customerPhone: string;
+  customerEmail?: string;
+  services: Array<{
+    id?: string;
+    name: string;
+    price: number;
+    duration: number;
+    category?: string;
+  }>;
+  date: string;
+  startTime: string;
+  notes?: string;
+};
+
+export function createSalonAppointment(payload: PublicAppointmentPayload) {
+  return apiPost<{ appointmentNo: string }>('/api/salon/public/appointments', payload);
+}

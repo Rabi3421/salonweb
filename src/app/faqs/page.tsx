@@ -3,7 +3,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import JsonLd from '@/components/JsonLd';
 import StickyBottomCTA from '@/components/StickyBottomCTA';
-import { getPublicSiteData } from '@/lib/public-site-data';
+import { getPublicSiteDataAsync } from '@/lib/public-site-data';
 import { buildPageMetadata } from '@/lib/seo';
 import { buildBreadcrumbSchema, buildFAQSchema } from '@/lib/structured-data';
 import FAQHero from './components/FAQHero';
@@ -17,8 +17,8 @@ export const metadata = buildPageMetadata({
   path: '/faqs',
 });
 
-export default function FAQsPage() {
-  const data = getPublicSiteData();
+export default async function FAQsPage() {
+  const data = await getPublicSiteDataAsync();
 
   return (
     <>

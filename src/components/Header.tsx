@@ -3,18 +3,21 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import AppLogo from '@/components/ui/AppLogo';
 import Icon from '@/components/ui/AppIcon';
-import { getPublicSiteData, getContactLinks } from '@/lib/public-site-data';
-
-const siteData = getPublicSiteData();
-const navLinks = siteData.navLinks;
-const links = getContactLinks(siteData.contact);
-const brandName = siteData.brand.name;
+import { getCurrentSalonUser, isMockModeEnabled, MOCK_USERS } from '@/lib/dashboard-auth';
+import { getContactLinks } from '@/lib/public-site-data';
+import type { SalonAuthUser } from '@/types/auth';
 
 export default function Header() {
+  const siteData = usePublicSiteData();
+  const navLinks = siteData.navLinks;
+  const links = getContactLinks(siteData.contact);
+  const brandName = siteData.brand.name;
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dashboardUser, setDashboardUser] = useState<SalonAuthUser | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -22,6 +25,29 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadDashboardUser() {
+      if (isMockModeEnabled()) {
+        const mockRole =
+          (typeof window !== 'undefined' && sessionStorage.getItem('mockRole')) || '';
+        if (mockRole && mounted) {
+          setDashboardUser(MOCK_USERS[mockRole] ?? MOCK_USERS.owner);
+        }
+        return;
+      }
+
+      const user = await getCurrentSalonUser();
+      if (mounted) setDashboardUser(user);
+    }
+
+    loadDashboardUser();
+    return () => {
+      mounted = false;
+    };
+  }, [pathname]);
 
   useEffect(() => {
     if (menuOpen) {
@@ -46,7 +72,7 @@ export default function Header() {
         >
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0" onClick={handleNavClick}>
-            <AppLogo size={36} />
+            <AppLogo size={36} alt={`${siteData.brand.fullName} logo`} />
             <span className="font-display font-semibold text-lg text-foreground hidden sm:block">
               {brandName}
             </span>
@@ -93,6 +119,13 @@ export default function Header() {
             >
               Book Now
             </Link>
+            <Link
+              href={dashboardUser ? '/dashboard' : '/login'}
+              className="flex items-center justify-center w-9 h-9 rounded-full bg-secondary hover:bg-primary/10 transition-colors"
+              aria-label={dashboardUser ? 'Open dashboard' : 'Sign In'}
+            >
+              <ProfileAvatar user={dashboardUser} />
+            </Link>
           </div>
 
           {/* Mobile Hamburger */}
@@ -132,6 +165,14 @@ export default function Header() {
               >
                 Book Appointment
               </Link>
+              <Link
+                href={dashboardUser ? '/dashboard' : '/login'}
+                onClick={handleNavClick}
+                className="flex items-center justify-center gap-2 py-3 rounded-2xl bg-secondary text-foreground font-medium text-sm"
+              >
+                <ProfileAvatar user={dashboardUser} />
+                {dashboardUser ? 'Dashboard' : 'Sign In'}
+              </Link>
               <div className="flex gap-3">
                 <a
                   href={links.tel}
@@ -155,5 +196,24 @@ export default function Header() {
         </div>
       )}
     </>
+  );
+}
+
+function ProfileAvatar({ user }: { user: SalonAuthUser | null }) {
+  if (!user) return <Icon name="UserIcon" size={16} className="text-primary" />;
+
+  if (user.avatar) {
+    return (
+      <span
+        className="block h-7 w-7 rounded-full bg-cover bg-center ring-1 ring-primary/20"
+        style={{ backgroundImage: `url(${user.avatar})` }}
+      />
+    );
+  }
+
+  return (
+    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+      {user.name.charAt(0).toUpperCase()}
+    </span>
   );
 }

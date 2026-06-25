@@ -2,9 +2,10 @@
 
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import Icon from '@/components/ui/AppIcon';
 
-const packages = [
+const fallbackPackages = [
   {
     name: 'Bridal Glow Package',
     price: '₹18,999',
@@ -53,7 +54,20 @@ const packages = [
 ];
 
 export default function PackagesSection() {
+  const siteData = usePublicSiteData();
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const packages =
+    siteData.packages.length > 0
+      ? siteData.packages.slice(0, 3).map((pkg, index) => ({
+          name: pkg.name,
+          price: pkg.price,
+          highlight: Boolean(pkg.highlighted),
+          badge: pkg.tag ?? null,
+          description: pkg.bestFor,
+          includes: pkg.includes,
+          icon: index === 0 ? 'HeartIcon' : index === 1 ? 'CalendarDaysIcon' : 'StarIcon',
+        }))
+      : fallbackPackages;
 
   useEffect(() => {
     const observer = new IntersectionObserver(

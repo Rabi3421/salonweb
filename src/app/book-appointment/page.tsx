@@ -6,7 +6,7 @@ import BookAppointmentClient from './BookAppointmentClient';
 export const metadata = buildPageMetadata({
   title: 'Book Appointment',
   description:
-    'Request an appointment at Rosé Luxe Salon for hair styling, facial, nail art, bridal makeup, party makeup and premium salon services.',
+    'Request a salon appointment for hair styling, facial, nail art, bridal makeup, party makeup and beauty services.',
   path: '/book-appointment',
 });
 

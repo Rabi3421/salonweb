@@ -1,8 +1,13 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import Icon from '@/components/ui/AppIcon';
 
 export default function AboutCTA() {
+  const { brand } = usePublicSiteData();
+
   return (
     <section className="px-4 py-20 bg-secondary/30">
       <div className="max-w-4xl mx-auto">
@@ -18,7 +23,7 @@ export default function AboutCTA() {
               </div>
             </div>
             <h2 className="font-display text-section-title text-white font-light mb-5">
-              Ready To Experience <span className="italic">Rosé Luxe?</span>
+              Ready To Experience <span className="italic">{brand.name}?</span>
             </h2>
             <p className="text-white/80 text-lg max-w-xl mx-auto mb-10">
               Book your appointment today and enjoy premium salon care designed around your beauty

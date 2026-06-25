@@ -6,7 +6,7 @@ import { buildBreadcrumbSchema } from '@/lib/structured-data';
 export const metadata = buildPageMetadata({
   title: 'Terms & Conditions',
   description:
-    'Read the terms and conditions for using the Rosé Luxe Salon website and appointment enquiry services.',
+    'Read the terms and conditions for using the salon website and appointment enquiry services.',
   path: '/terms',
 });
 
@@ -14,7 +14,7 @@ const sections = [
   {
     title: 'Website Use',
     content:
-      'By using the Rosé Luxe Salon website, you agree to these terms. This website is intended for informational purposes and to allow clients to submit appointment enquiries.',
+      'By using the salon website, you agree to these terms. This website is intended for informational purposes and to allow clients to submit appointment enquiries.',
   },
   {
     title: 'Appointment Requests',
@@ -39,7 +39,7 @@ const sections = [
   {
     title: 'Changes To Services',
     content:
-      'Rosé Luxe Salon reserves the right to modify, update, or discontinue services, pricing, and website content at any time without prior notice.',
+      'The salon reserves the right to modify, update, or discontinue services, pricing, and website content at any time without prior notice.',
   },
   {
     title: 'Limitation Note',
@@ -65,7 +65,7 @@ export default function TermsPage() {
       <PolicyPage
         eyebrow="Terms & Conditions"
         title="Terms & Conditions"
-        subtitle="Terms of use for the Rosé Luxe Salon website and appointment services."
+        subtitle="Terms of use for the salon website and appointment services."
         lastUpdated="June 2026"
         notice="These terms are a sample template and should be reviewed by the salon owner before final publishing."
         sections={sections}

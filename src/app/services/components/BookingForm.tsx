@@ -1,20 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import Icon from '@/components/ui/AppIcon';
-import { createSalonEnquiry } from '@/lib/salon-api';
+import { createSalonAppointment } from '@/lib/salon-api';
 import {
-  getPublicSiteData,
   getServiceOptions,
   buildAppointmentMessage,
   getContactLinks,
   formatPhoneDisplay,
+  buildAppointmentServiceSnapshot,
+  toTwentyFourHourTime,
 } from '@/lib/public-site-data';
-
-const siteData = getPublicSiteData();
-const serviceOptions = [...getServiceOptions(siteData), ...siteData.packages.map((p) => p.name)];
-const cLinks = getContactLinks(siteData.contact);
-const phoneDisplay = formatPhoneDisplay(siteData.contact.phone);
 
 const timeSlots = [
   '9:00 AM',
@@ -35,6 +32,10 @@ interface BookingFormProps {
 }
 
 export default function BookingForm({ prefilledService }: BookingFormProps) {
+  const siteData = usePublicSiteData();
+  const serviceOptions = [...getServiceOptions(siteData), ...siteData.packages.map((p) => p.name)];
+  const cLinks = getContactLinks(siteData.contact);
+  const phoneDisplay = formatPhoneDisplay(siteData.contact.phone);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -48,7 +49,7 @@ export default function BookingForm({ prefilledService }: BookingFormProps) {
   const [result, setResult] = useState<{
     success: boolean;
     text: string;
-    enquiryId?: string;
+    appointmentNo?: string;
   } | null>(null);
 
   useEffect(() => {
@@ -76,19 +77,20 @@ export default function BookingForm({ prefilledService }: BookingFormProps) {
     });
 
     try {
-      const res = await createSalonEnquiry({
-        type: 'appointment_request',
-        name: formData.name,
-        phone: formData.phone || undefined,
-        email: formData.email || undefined,
-        message,
-        source: 'salonweb_services_booking',
+      const res = await createSalonAppointment({
+        customerName: formData.name,
+        customerPhone: formData.phone,
+        customerEmail: formData.email || undefined,
+        services: [buildAppointmentServiceSnapshot(siteData, formData.service)],
+        date: formData.date,
+        startTime: toTwentyFourHourTime(formData.time),
+        notes: message,
       });
 
       setResult({
         success: true,
-        text: 'Appointment request sent successfully! Our team will contact you soon.',
-        enquiryId: res.data?.enquiryId,
+        text: 'Appointment requested successfully! Our team will contact you soon.',
+        appointmentNo: res.data?.appointmentNo,
       });
       setFormData({ name: '', phone: '', email: '', service: '', date: '', time: '', message: '' });
     } catch (err) {
@@ -130,9 +132,9 @@ export default function BookingForm({ prefilledService }: BookingFormProps) {
               <p className="text-muted-foreground mb-3">
                 We&apos;ll confirm your appointment via call or WhatsApp shortly.
               </p>
-              {result.enquiryId ? (
+              {result.appointmentNo ? (
                 <p className="text-xs text-muted-foreground/60 font-mono">
-                  Reference: {result.enquiryId}
+                  Reference: {result.appointmentNo}
                 </p>
               ) : null}
               <button

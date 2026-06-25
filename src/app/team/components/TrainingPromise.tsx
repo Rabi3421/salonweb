@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import Icon from '@/components/ui/AppIcon';
 
 const promises = [
@@ -20,6 +23,8 @@ const promises = [
 ];
 
 export default function TrainingPromise() {
+  const { brand } = usePublicSiteData();
+
   return (
     <section className="section-padding px-4 bg-background">
       <div className="max-w-5xl mx-auto">
@@ -32,9 +37,9 @@ export default function TrainingPromise() {
               Trained, Trusted & <span className="italic text-primary">Detail-Focused</span>
             </h2>
             <p className="text-muted-foreground text-base max-w-2xl mx-auto leading-relaxed">
-              Every expert at Rosé Luxe follows a careful consultation-first approach. From product
-              selection to final styling, our team focuses on comfort, hygiene, and results that
-              match your personality.
+              Every expert at {brand.name} follows a careful consultation-first approach. From
+              product selection to final styling, our team focuses on comfort, hygiene, and results
+              that match your personality.
             </p>
           </div>
 

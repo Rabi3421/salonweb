@@ -4,19 +4,32 @@ import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
+import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 
-const stats = [
-  { value: '4.9', label: 'Rating', icon: 'StarIcon' as const },
-  { value: '6000+', label: 'Happy Clients', icon: 'UserGroupIcon' as const },
-  { value: 'Ahmedabad', label: 'Location', icon: 'MapPinIcon' as const },
-];
+function getReadableHeroText(brandName: string, description: string) {
+  return {
+    eyebrow: `Welcome to ${brandName}`,
+    title: brandName,
+    subtitle:
+      description && description !== brandName
+        ? description
+        : 'Book salon services, beauty packages, and appointments with our expert team.',
+  };
+}
 
 export default function HeroSection() {
+  const { brand, contact } = usePublicSiteData();
   const eyebrowRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const btnsRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const hero = getReadableHeroText(brand.name || brand.fullName, brand.shortDescription);
+  const stats = [
+    { value: brand.rating || '4.9', label: 'Rating', icon: 'StarIcon' },
+    { value: brand.happyClients || 'Happy Clients', label: 'Happy Clients', icon: 'UserGroupIcon' },
+    { value: brand.location || contact.city || 'Location', label: 'Location', icon: 'MapPinIcon' },
+  ];
 
   useEffect(() => {
     const elements = [
@@ -71,16 +84,16 @@ export default function HeroSection() {
         <div ref={eyebrowRef} className="mb-5">
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 text-white/90 text-xs font-semibold tracking-widest uppercase">
             <Icon name="SparklesIcon" size={13} className="text-accent" />
-            Because You Deserve To Shine
+            {hero.eyebrow}
           </span>
         </div>
 
         {/* Headline */}
         <h1
           ref={headlineRef}
-          className="text-hero font-display font-light text-white mb-6 max-w-3xl"
+          className="text-hero font-display font-light text-white mb-6 max-w-4xl"
         >
-          Premium Salon Experience <span className="italic text-accent">For Modern Women</span>
+          {hero.title}
         </h1>
 
         {/* Subtitle */}
@@ -88,8 +101,7 @@ export default function HeroSection() {
           ref={subtitleRef}
           className="text-white/75 text-lg md:text-xl font-light leading-relaxed max-w-2xl mb-10"
         >
-          Indulge in luxury treatments crafted by expert stylists. Where beauty meets elegance, and
-          every visit feels like a retreat.
+          {hero.subtitle}
         </p>
 
         {/* Buttons */}

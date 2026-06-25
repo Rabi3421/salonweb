@@ -1,5 +1,5 @@
 import JsonLd from '@/components/JsonLd';
-import { getPublicSiteData } from '@/lib/public-site-data';
+import { getPublicSiteDataAsync } from '@/lib/public-site-data';
 import { buildPageMetadata } from '@/lib/seo';
 import { buildBreadcrumbSchema, buildServiceSchema } from '@/lib/structured-data';
 import ServicesClient from './ServicesClient';
@@ -11,8 +11,8 @@ export const metadata = buildPageMetadata({
   path: '/services',
 });
 
-export default function ServicesPage() {
-  const data = getPublicSiteData();
+export default async function ServicesPage() {
+  const data = await getPublicSiteDataAsync();
 
   return (
     <>

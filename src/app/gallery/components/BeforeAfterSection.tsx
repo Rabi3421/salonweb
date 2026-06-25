@@ -3,6 +3,8 @@
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Icon from '@/components/ui/AppIcon';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText } from '@/lib/cms-mappers';
 
 const transformations = [
   {
@@ -26,6 +28,8 @@ const transformations = [
 ];
 
 export default function BeforeAfterSection() {
+  const cms = useCmsSection('beforeAfter');
+  if (!shouldRenderSection(cms)) return null;
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {

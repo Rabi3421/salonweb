@@ -1,18 +1,28 @@
 import JsonLd from '@/components/JsonLd';
+import { CmsPageProvider } from '@/components/CmsPageProvider';
 import { getPublicSiteDataAsync } from '@/lib/public-site-data';
+import { fetchCmsPage } from '@/lib/cms-client';
 import { buildPageMetadata } from '@/lib/seo';
 import { buildBreadcrumbSchema, buildServiceSchema } from '@/lib/structured-data';
+import type { Metadata } from 'next';
 import ServicesClient from './ServicesClient';
 
-export const metadata = buildPageMetadata({
-  title: 'Salon Services & Pricing',
-  description:
-    'Explore premium salon services and pricing for hair styling, hair spa, facial treatment, manicure, pedicure, nail art, bridal makeup and party makeup.',
-  path: '/services',
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const cmsPage = await fetchCmsPage('services');
+  return buildPageMetadata({
+    title: cmsPage?.seo?.metaTitle || 'Salon Services & Pricing',
+    description:
+      cmsPage?.seo?.metaDescription ||
+      'Explore premium salon services and pricing for hair styling, hair spa, facial treatment, manicure, pedicure, nail art, bridal makeup and party makeup.',
+    path: '/services',
+  });
+}
 
 export default async function ServicesPage() {
-  const data = await getPublicSiteDataAsync();
+  const [data, cmsPage] = await Promise.all([
+    getPublicSiteDataAsync(),
+    fetchCmsPage('services'),
+  ]);
 
   return (
     <>
@@ -23,7 +33,9 @@ export default async function ServicesPage() {
           { name: 'Services', path: '/services' },
         ])}
       />
-      <ServicesClient />
+      <CmsPageProvider page={cmsPage}>
+        <ServicesClient />
+      </CmsPageProvider>
     </>
   );
 }

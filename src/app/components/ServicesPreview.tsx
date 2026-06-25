@@ -5,6 +5,8 @@ import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
 import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText } from '@/lib/cms-mappers';
 
 const fallbackServices = [
   {
@@ -70,6 +72,8 @@ function getServiceIcon(category: string) {
 
 export default function ServicesPreview() {
   const siteData = usePublicSiteData();
+  const cms = useCmsSection('featuredServices');
+  if (!shouldRenderSection(cms)) return null;
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const services = (
     siteData.services.length > 0
@@ -112,13 +116,13 @@ export default function ServicesPreview() {
         {/* Header */}
         <div className="text-center mb-14">
           <span className="inline-block text-primary text-xs font-bold tracking-widest uppercase mb-3">
-            What We Offer
+            {sectionText(cms, 'eyebrow', 'What We Offer')}
           </span>
           <h2 className="font-display text-section-title text-foreground font-light mb-4">
-            Our Premium <span className="italic text-primary">Services</span>
+            {sectionText(cms, 'title', 'Our Premium Services')}
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Luxury treatments tailored for you, delivered by skilled professionals.
+            {sectionText(cms, 'subtitle', 'Luxury treatments tailored for you, delivered by skilled professionals.')}
           </p>
         </div>
 

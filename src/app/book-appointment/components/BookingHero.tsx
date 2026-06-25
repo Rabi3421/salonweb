@@ -2,8 +2,12 @@
 
 import React, { useEffect, useRef } from 'react';
 import Icon from '@/components/ui/AppIcon';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText } from '@/lib/cms-mappers';
 
 export default function BookingHero() {
+  const cms = useCmsSection('hero');
+  if (!shouldRenderSection(cms)) return null;
   const headRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,14 +33,13 @@ export default function BookingHero() {
       <div ref={headRef} className="relative z-10 max-w-3xl mx-auto text-center">
         <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary border border-border text-primary text-xs font-bold tracking-widest uppercase mb-6">
           <Icon name="CalendarDaysIcon" size={13} className="text-primary" />
-          Book Your Visit
+          {sectionText(cms, 'eyebrow', 'Book Your Visit')}
         </span>
         <h1 className="font-display text-hero text-foreground font-light">
-          Your Beauty <span className="italic text-primary">Appointment</span> Starts Here
+          {sectionText(cms, 'title', 'Your Beauty Appointment Starts Here')}
         </h1>
         <p className="text-muted-foreground text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto mt-6">
-          Choose your preferred service and time. Our team will confirm your appointment by call or
-          WhatsApp.
+          {sectionText(cms, 'subtitle', 'Choose your preferred service and time. Our team will confirm your appointment by call or WhatsApp.')}
         </p>
       </div>
     </section>

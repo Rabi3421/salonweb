@@ -2,8 +2,10 @@
 
 import React, { useEffect, useRef } from 'react';
 import Icon from '@/components/ui/AppIcon';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText, sectionItems } from '@/lib/cms-mappers';
 
-const features = [
+const defaultFeatures = [
   {
     icon: 'StarIcon' as const,
     title: 'Premium Quality',
@@ -28,6 +30,12 @@ const features = [
 ];
 
 export default function WhyChooseUs() {
+  const cms = useCmsSection('whyChooseUs');
+  if (!shouldRenderSection(cms)) return null;
+  const eyebrow = sectionText(cms, 'eyebrow', 'Why Us');
+  const title = sectionText(cms, 'title', 'Why Choose Us');
+  const subtitle = sectionText(cms, 'subtitle', 'Experience the difference that sets us apart from the rest.');
+  const features = sectionItems(cms, defaultFeatures) as { icon: string; title: string; description: string }[];
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -55,13 +63,13 @@ export default function WhyChooseUs() {
           {/* Header */}
           <div className="text-center mb-12">
             <span className="inline-block text-primary text-xs font-bold tracking-widest uppercase mb-3">
-              Why Us
+              {eyebrow}
             </span>
             <h2 className="font-display text-section-title text-foreground font-light mb-4">
-              Why Choose <span className="italic text-primary">Us</span>
+              {title}
             </h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-              Experience the difference that sets us apart from the rest.
+              {subtitle}
             </p>
           </div>
 

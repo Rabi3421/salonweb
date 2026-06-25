@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection } from '@/lib/cms-mappers';
 
 type Category = 'All' | 'Hair' | 'Makeup' | 'Bridal' | 'Nails' | 'Facial' | 'Salon Interior';
 
@@ -92,6 +94,8 @@ const galleryItems = [
 ];
 
 export default function GalleryMasonry() {
+  const cms = useCmsSection('galleryGrid');
+  if (!shouldRenderSection(cms)) return null;
   const [active, setActive] = useState<Category>('All');
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 

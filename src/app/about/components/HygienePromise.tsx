@@ -2,8 +2,10 @@
 
 import React, { useEffect, useRef } from 'react';
 import Icon from '@/components/ui/AppIcon';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText, sectionItems } from '@/lib/cms-mappers';
 
-const promises = [
+const defaultPromises = [
   {
     icon: 'ShieldCheckIcon' as const,
     title: 'Sanitized Tools',
@@ -29,6 +31,9 @@ const promises = [
 ];
 
 export default function HygienePromise() {
+  const cms = useCmsSection('hygienePromise');
+  if (!shouldRenderSection(cms)) return null;
+  const promises = sectionItems(cms, defaultPromises) as typeof defaultPromises;
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -54,13 +59,13 @@ export default function HygienePromise() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <span className="inline-block text-primary text-xs font-bold tracking-widest uppercase mb-3">
-            Our Promise
+            {sectionText(cms, 'eyebrow', 'Our Promise')}
           </span>
           <h2 className="font-display text-section-title text-foreground font-light mb-4">
-            Our Promise Of <span className="italic text-primary">Care</span>
+            {sectionText(cms, 'title', 'Our Promise Of Care')}
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Every detail is designed for your safety, comfort, and confidence.
+            {sectionText(cms, 'subtitle', 'Every detail is designed for your safety, comfort, and confidence.')}
           </p>
         </div>
 

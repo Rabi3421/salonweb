@@ -1,7 +1,14 @@
+'use client';
+
 import React from 'react';
 import Icon from '@/components/ui/AppIcon';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText } from '@/lib/cms-mappers';
 
 export default function FounderMessage() {
+  const cms = useCmsSection('founderMessage');
+  if (!shouldRenderSection(cms)) return null;
+
   return (
     <section className="section-padding px-4 bg-secondary/30">
       <div className="max-w-4xl mx-auto">
@@ -11,10 +18,10 @@ export default function FounderMessage() {
 
           <div className="relative z-10 text-center">
             <span className="inline-block text-primary text-xs font-bold tracking-widest uppercase mb-3">
-              Founder Message
+              {sectionText(cms, 'eyebrow', 'Founder Message')}
             </span>
             <h2 className="font-display text-section-title text-foreground font-light mb-8">
-              Beauty Should Feel <span className="italic text-primary">Personal</span>
+              {sectionText(cms, 'title', 'Beauty Should Feel Personal')}
             </h2>
 
             <div className="max-w-2xl mx-auto">
@@ -25,9 +32,7 @@ export default function FounderMessage() {
                   className="text-primary/20 mx-auto mb-4"
                 />
                 <p className="text-muted-foreground text-lg leading-relaxed italic font-light">
-                  &ldquo;Our vision is to make every visit feel special. Whether it is a quick
-                  grooming session, a bridal transformation, or a complete beauty day, we want every
-                  client to walk out feeling confident and cared for.&rdquo;
+                  &ldquo;{sectionText(cms, 'quote', 'Our vision is to make every visit feel special. Whether it is a quick grooming session, a bridal transformation, or a complete beauty day, we want every client to walk out feeling confident and cared for.')}&rdquo;
                 </p>
               </div>
 
@@ -36,8 +41,8 @@ export default function FounderMessage() {
                   <span className="text-white font-display text-xl font-semibold">A</span>
                 </div>
                 <div>
-                  <p className="font-semibold text-foreground text-base">Ananya Sharma</p>
-                  <p className="text-muted-foreground text-sm">Founder & Creative Director</p>
+                  <p className="font-semibold text-foreground text-base">{sectionText(cms, 'author', 'Ananya Sharma')}</p>
+                  <p className="text-muted-foreground text-sm">{sectionText(cms, 'designation', 'Founder & Creative Director')}</p>
                 </div>
               </div>
             </div>

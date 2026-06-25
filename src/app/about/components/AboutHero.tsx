@@ -2,10 +2,14 @@
 
 import React, { useEffect, useRef } from 'react';
 import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText } from '@/lib/cms-mappers';
 import Icon from '@/components/ui/AppIcon';
 
 export default function AboutHero() {
   const { brand, about } = usePublicSiteData();
+  const cms = useCmsSection('hero');
+  if (!shouldRenderSection(cms)) return null;
   const headRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,14 +37,14 @@ export default function AboutHero() {
       <div ref={headRef} className="relative z-10 max-w-3xl mx-auto text-center">
         <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary border border-border text-primary text-xs font-bold tracking-widest uppercase mb-6">
           <Icon name="SparklesIcon" size={13} className="text-primary" />
-          About {brand.name}
+          {sectionText(cms, 'eyebrow', `About ${brand.name}`)}
         </span>
         <h1 className="font-display text-hero text-foreground font-light">
-          {about.title || 'Crafting Beauty'}
+          {sectionText(cms, 'title', about.title || 'Crafting Beauty')}
         </h1>
         <p className="text-muted-foreground text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto mt-6">
-          {brand.shortDescription ||
-            'A beauty destination where expert styling, care, and personal confidence come together.'}
+          {sectionText(cms, 'subtitle', brand.shortDescription ||
+            'A beauty destination where expert styling, care, and personal confidence come together.')}
         </p>
       </div>
     </section>

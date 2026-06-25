@@ -5,6 +5,8 @@ import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
 import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText, sectionItems, sectionImages, sectionButtons } from '@/lib/cms-mappers';
 
 function getReadableHeroText(brandName: string, description: string) {
   return {
@@ -19,17 +21,30 @@ function getReadableHeroText(brandName: string, description: string) {
 
 export default function HeroSection() {
   const { brand, contact } = usePublicSiteData();
+  const cms = useCmsSection('hero');
+  if (!shouldRenderSection(cms)) return null;
   const eyebrowRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const btnsRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const hero = getReadableHeroText(brand.name || brand.fullName, brand.shortDescription);
-  const stats = [
+  const fallback = getReadableHeroText(brand.name || brand.fullName, brand.shortDescription);
+  const hero = {
+    eyebrow: sectionText(cms, 'eyebrow', fallback.eyebrow),
+    title: sectionText(cms, 'title', fallback.title),
+    subtitle: sectionText(cms, 'subtitle', fallback.subtitle),
+  };
+  const heroImage = sectionImages(cms, [{ key: 'background', url: 'https://img.rocket.new/generatedImages/rocket_gen_img_1ab0090f8-1771885425178.png', alt: 'Luxury salon interior' }]);
+  const cmsBtns = sectionButtons(cms, [
+    { label: 'Book Appointment', href: '/book-appointment', type: 'primary' },
+    { label: 'Explore Services', href: '/services', type: 'secondary' },
+  ]);
+  const fallbackStats = [
     { value: brand.rating || '4.9', label: 'Rating', icon: 'StarIcon' },
     { value: brand.happyClients || 'Happy Clients', label: 'Happy Clients', icon: 'UserGroupIcon' },
     { value: brand.location || contact.city || 'Location', label: 'Location', icon: 'MapPinIcon' },
   ];
+  const stats = sectionItems(cms, fallbackStats) as { value: string; label: string; icon: string }[];
 
   useEffect(() => {
     const elements = [
@@ -60,8 +75,8 @@ export default function HeroSection() {
       {/* Background Image */}
       <div className="absolute inset-0">
         <AppImage
-          src="https://img.rocket.new/generatedImages/rocket_gen_img_1ab0090f8-1771885425178.png"
-          alt="Luxury salon interior with soft lighting, pink tones, and elegant styling stations"
+          src={heroImage[0]?.url || 'https://img.rocket.new/generatedImages/rocket_gen_img_1ab0090f8-1771885425178.png'}
+          alt={heroImage[0]?.alt || 'Luxury salon interior with soft lighting, pink tones, and elegant styling stations'}
           fill
           priority
           className="object-cover"
@@ -106,20 +121,24 @@ export default function HeroSection() {
 
         {/* Buttons */}
         <div ref={btnsRef} className="flex flex-col sm:flex-row gap-4 mb-14">
-          <Link
-            href="/book-appointment"
-            className="pink-gradient-btn text-primary-foreground font-semibold px-8 py-3.5 rounded-full text-base inline-flex items-center gap-2"
-          >
-            <Icon name="CalendarDaysIcon" size={18} className="text-white" />
-            Book Appointment
-          </Link>
-          <Link
-            href="/services"
-            className="px-8 py-3.5 rounded-full text-base font-semibold text-white border border-white/40 hover:bg-white/15 transition-colors inline-flex items-center gap-2"
-          >
-            Explore Services
-            <Icon name="ArrowRightIcon" size={18} className="text-white" />
-          </Link>
+          {cmsBtns[0]?.enabled !== false && (
+            <Link
+              href={cmsBtns[0]?.href || '/book-appointment'}
+              className="pink-gradient-btn text-primary-foreground font-semibold px-8 py-3.5 rounded-full text-base inline-flex items-center gap-2"
+            >
+              <Icon name="CalendarDaysIcon" size={18} className="text-white" />
+              {cmsBtns[0]?.label || 'Book Appointment'}
+            </Link>
+          )}
+          {cmsBtns[1]?.enabled !== false && (
+            <Link
+              href={cmsBtns[1]?.href || '/services'}
+              className="px-8 py-3.5 rounded-full text-base font-semibold text-white border border-white/40 hover:bg-white/15 transition-colors inline-flex items-center gap-2"
+            >
+              {cmsBtns[1]?.label || 'Explore Services'}
+              <Icon name="ArrowRightIcon" size={18} className="text-white" />
+            </Link>
+          )}
         </div>
 
         {/* Glass Stats Card */}

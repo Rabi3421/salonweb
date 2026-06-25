@@ -4,9 +4,13 @@ import React from 'react';
 import Link from 'next/link';
 import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import Icon from '@/components/ui/AppIcon';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText } from '@/lib/cms-mappers';
 
 export default function InstagramCTA() {
   const { brand } = usePublicSiteData();
+  const cms = useCmsSection('instagramCta');
+  if (!shouldRenderSection(cms)) return null;
 
   return (
     <section className="section-padding px-4 bg-background">
@@ -17,10 +21,10 @@ export default function InstagramCTA() {
 
           <div className="relative z-10">
             <span className="inline-block text-primary text-xs font-bold tracking-widest uppercase mb-3">
-              Follow The Glow
+              {sectionText(cms, 'eyebrow', 'Follow The Glow')}
             </span>
             <h2 className="font-display text-section-title text-foreground font-light mb-4">
-              See More Looks & <span className="italic text-primary">Transformations</span>
+              {sectionText(cms, 'title', 'See More Looks & Transformations')}
             </h2>
             <p className="text-muted-foreground text-base max-w-xl mx-auto mb-8 leading-relaxed">
               Follow {brand.name} for fresh beauty inspiration, bridal looks, styling ideas, and

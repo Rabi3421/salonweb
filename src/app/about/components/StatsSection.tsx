@@ -2,6 +2,8 @@
 
 import React, { useEffect, useRef } from 'react';
 import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionItems } from '@/lib/cms-mappers';
 
 const fallbackStats = [
   { value: '10+', label: 'Years Experience' },
@@ -12,8 +14,11 @@ const fallbackStats = [
 
 export default function StatsSection() {
   const { about } = usePublicSiteData();
+  const cms = useCmsSection('stats');
+  if (!shouldRenderSection(cms)) return null;
   const ref = useRef<HTMLDivElement>(null);
-  const stats = about.stats.length > 0 ? about.stats : fallbackStats;
+  const cmsStats = sectionItems(cms, []) as { value: string; label: string }[];
+  const stats = cmsStats.length > 0 ? cmsStats : about.stats.length > 0 ? about.stats : fallbackStats;
 
   useEffect(() => {
     const el = ref.current;

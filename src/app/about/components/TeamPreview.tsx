@@ -3,6 +3,8 @@
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Icon from '@/components/ui/AppIcon';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText } from '@/lib/cms-mappers';
 
 const team = [
   {
@@ -36,6 +38,8 @@ const team = [
 ];
 
 export default function TeamPreview() {
+  const cms = useCmsSection('teamPreview');
+  if (!shouldRenderSection(cms)) return null;
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -61,10 +65,10 @@ export default function TeamPreview() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <span className="inline-block text-primary text-xs font-bold tracking-widest uppercase mb-3">
-            Meet Our Experts
+            {sectionText(cms, 'eyebrow', 'Meet Our Experts')}
           </span>
           <h2 className="font-display text-section-title text-foreground font-light mb-4">
-            Skilled Stylists & <span className="italic text-primary">Beauty Specialists</span>
+            {sectionText(cms, 'title', 'Skilled Stylists & Beauty Specialists')}
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
             Our team of experts brings passion, precision, and years of experience to every

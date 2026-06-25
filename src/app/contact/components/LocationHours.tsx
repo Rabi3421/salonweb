@@ -4,9 +4,13 @@ import React from 'react';
 import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import Icon from '@/components/ui/AppIcon';
 import { getContactLinks, formatPhoneDisplay } from '@/lib/public-site-data';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection } from '@/lib/cms-mappers';
 
 export default function LocationHours() {
   const sd = usePublicSiteData();
+  const cms = useCmsSection('mapSection');
+  if (!shouldRenderSection(cms)) return null;
   const cl = getContactLinks(sd.contact);
 
   return (

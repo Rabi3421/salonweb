@@ -2,8 +2,10 @@
 
 import React, { useEffect, useRef } from 'react';
 import Icon from '@/components/ui/AppIcon';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText, sectionItems } from '@/lib/cms-mappers';
 
-const testimonials = [
+const defaultTestimonials = [
   {
     quote:
       "The best salon experience I've ever had. The staff made me feel so special and the results were absolutely stunning.",
@@ -31,6 +33,11 @@ const testimonials = [
 ];
 
 export default function TestimonialsSection() {
+  const cms = useCmsSection('testimonials');
+  if (!shouldRenderSection(cms)) return null;
+  const eyebrow = sectionText(cms, 'eyebrow', 'Happy Clients');
+  const title = sectionText(cms, 'title', 'Loved By Our Clients');
+  const testimonials = sectionItems(cms, defaultTestimonials) as { quote: string; name: string; role: string; initial: string; color: string }[];
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -56,10 +63,10 @@ export default function TestimonialsSection() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <span className="inline-block text-primary text-xs font-bold tracking-widest uppercase mb-3">
-            Happy Clients
+            {eyebrow}
           </span>
           <h2 className="font-display text-section-title text-foreground font-light">
-            Loved By Our <span className="italic text-primary">Clients</span>
+            {title}
           </h2>
         </div>
 

@@ -3,11 +3,15 @@
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText, sectionTextArray } from '@/lib/cms-mappers';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
 
 export default function StorySection() {
   const { brand, about } = usePublicSiteData();
+  const cms = useCmsSection('story');
+  if (!shouldRenderSection(cms)) return null;
   const sectionRef = useRef<HTMLDivElement>(null);
   const paragraphs =
     about.paragraphs.length > 0
@@ -86,10 +90,10 @@ export default function StorySection() {
         {/* Text Content */}
         <div>
           <span className="inline-block text-primary text-xs font-bold tracking-widest uppercase mb-4">
-            Our Story
+            {sectionText(cms, 'eyebrow', 'Our Story')}
           </span>
           <h2 className="font-display text-section-title text-foreground font-light mb-6">
-            A Salon Experience <span className="italic text-primary">Designed Around You</span>
+            {sectionText(cms, 'title', 'A Salon Experience Designed Around You')}
           </h2>
           {paragraphs.slice(0, 2).map((paragraph, index) => (
             <p

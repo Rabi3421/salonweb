@@ -1,9 +1,16 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText } from '@/lib/cms-mappers';
 
 export default function ServicesHero() {
+  const cms = useCmsSection('hero');
+  if (!shouldRenderSection(cms)) return null;
+
   return (
     <section className="relative min-h-[50vh] flex items-center justify-center overflow-hidden pt-24 pb-16 px-4">
       {/* Background */}
@@ -24,14 +31,13 @@ export default function ServicesHero() {
       <div className="relative z-10 text-center max-w-3xl mx-auto">
         <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 text-white/90 text-xs font-semibold tracking-widest uppercase mb-5">
           <Icon name="SparklesIcon" size={13} className="text-accent" />
-          What We Offer
+          {sectionText(cms, 'eyebrow', 'What We Offer')}
         </span>
         <h1 className="font-display text-hero font-light text-white mb-5">
-          Luxury Beauty Services <span className="italic text-accent">Tailored For You</span>
+          {sectionText(cms, 'title', 'Luxury Beauty Services Tailored For You')}
         </h1>
         <p className="text-white/75 text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
-          Explore our premium treatments, transparent pricing, and expert salon care — then request
-          your appointment in one simple step.
+          {sectionText(cms, 'subtitle', 'Explore our premium treatments, transparent pricing, and expert salon care — then request your appointment in one simple step.')}
         </p>
         <Link
           href="#booking"

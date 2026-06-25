@@ -5,6 +5,8 @@ import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
 import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText } from '@/lib/cms-mappers';
 
 const fallbackStats = [
   { value: '10+', label: 'Years Experience' },
@@ -15,6 +17,8 @@ const fallbackStats = [
 
 export default function AboutSection() {
   const { about, brand } = usePublicSiteData();
+  const cms = useCmsSection('aboutPreview');
+  if (!shouldRenderSection(cms)) return null;
   const leftRef = useRef<HTMLDivElement>(null);
   const rightRef = useRef<HTMLDivElement>(null);
   const stats = about.stats.length > 0 ? about.stats : fallbackStats;
@@ -120,10 +124,10 @@ export default function AboutSection() {
             }}
           >
             <span className="inline-block text-primary text-xs font-bold tracking-widest uppercase mb-4">
-              About Us
+              {sectionText(cms, 'eyebrow', 'About Us')}
             </span>
             <h2 className="font-display text-section-title text-foreground font-light mb-6">
-              {about.title || 'Crafting Beauty'}
+              {sectionText(cms, 'title', about.title || 'Crafting Beauty')}
             </h2>
             {paragraphs.slice(0, 2).map((paragraph, index) => (
               <p

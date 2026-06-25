@@ -3,6 +3,8 @@
 import React, { useEffect, useRef } from 'react';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText } from '@/lib/cms-mappers';
 
 const galleryItems = [
   {
@@ -50,6 +52,8 @@ const galleryItems = [
 ];
 
 export default function GallerySection() {
+  const cms = useCmsSection('galleryPreview');
+  if (!shouldRenderSection(cms)) return null;
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -75,13 +79,13 @@ export default function GallerySection() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <span className="inline-block text-primary text-xs font-bold tracking-widest uppercase mb-3">
-            Our Work
+            {sectionText(cms, 'eyebrow', 'Our Work')}
           </span>
           <h2 className="font-display text-section-title text-foreground font-light mb-4">
-            Our <span className="italic text-primary">Gallery</span>
+            {sectionText(cms, 'title', 'Our Gallery')}
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            A glimpse into our world of beauty and transformations.
+            {sectionText(cms, 'subtitle', 'A glimpse into our world of beauty and transformations.')}
           </p>
         </div>
 

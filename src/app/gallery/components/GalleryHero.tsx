@@ -2,8 +2,12 @@
 
 import React, { useEffect, useRef } from 'react';
 import Icon from '@/components/ui/AppIcon';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText } from '@/lib/cms-mappers';
 
 export default function GalleryHero() {
+  const cms = useCmsSection('hero');
+  if (!shouldRenderSection(cms)) return null;
   const headRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,15 +34,13 @@ export default function GalleryHero() {
       <div ref={headRef} className="relative z-10 max-w-3xl mx-auto text-center">
         <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary border border-border text-primary text-xs font-bold tracking-widest uppercase mb-6">
           <Icon name="CameraIcon" size={13} className="text-primary" />
-          Our Work
+          {sectionText(cms, 'eyebrow', 'Our Work')}
         </span>
         <h1 className="font-display text-hero text-foreground font-light">
-          A Gallery Of Beauty, <span className="italic text-primary">Confidence</span> &
-          Transformation
+          {sectionText(cms, 'title', 'A Gallery Of Beauty, Confidence & Transformation')}
         </h1>
         <p className="text-muted-foreground text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto mt-6">
-          Step inside our world of premium salon care — from elegant hair styling and glowing
-          facials to bridal transformations and luxury nail art.
+          {sectionText(cms, 'subtitle', 'Step inside our world of premium salon care — from elegant hair styling and glowing facials to bridal transformations and luxury nail art.')}
         </p>
       </div>
     </section>

@@ -3,10 +3,20 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText, sectionButtons } from '@/lib/cms-mappers';
 import Icon from '@/components/ui/AppIcon';
 
 export default function AboutCTA() {
   const { brand } = usePublicSiteData();
+  const cms = useCmsSection('cta');
+  if (!shouldRenderSection(cms)) return null;
+  const ctaTitle = sectionText(cms, 'title', `Ready To Experience ${brand.name}?`);
+  const ctaSubtitle = sectionText(cms, 'subtitle', 'Book your appointment today and enjoy premium salon care designed around your beauty goals.');
+  const ctaBtns = sectionButtons(cms, [
+    { label: 'Book Appointment', href: '/services#booking', type: 'primary' },
+    { label: 'Explore Services', href: '/services', type: 'secondary' },
+  ]);
 
   return (
     <section className="px-4 py-20 bg-secondary/30">
@@ -23,27 +33,30 @@ export default function AboutCTA() {
               </div>
             </div>
             <h2 className="font-display text-section-title text-white font-light mb-5">
-              Ready To Experience <span className="italic">{brand.name}?</span>
+              {ctaTitle}
             </h2>
             <p className="text-white/80 text-lg max-w-xl mx-auto mb-10">
-              Book your appointment today and enjoy premium salon care designed around your beauty
-              goals.
+              {ctaSubtitle}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/services#booking"
-                className="bg-white text-primary font-semibold px-8 py-3.5 rounded-full inline-flex items-center justify-center gap-2 hover:bg-white/90 transition-colors shadow-lg"
-              >
-                <Icon name="CalendarDaysIcon" size={18} className="text-primary" />
-                Book Appointment
-              </Link>
-              <Link
-                href="/services"
-                className="border border-white/50 text-white font-semibold px-8 py-3.5 rounded-full inline-flex items-center justify-center gap-2 hover:bg-white/15 transition-colors"
-              >
-                Explore Services
-                <Icon name="ArrowRightIcon" size={18} className="text-white" />
-              </Link>
+              {ctaBtns[0]?.enabled !== false && (
+                <Link
+                  href={ctaBtns[0]?.href || '/services#booking'}
+                  className="bg-white text-primary font-semibold px-8 py-3.5 rounded-full inline-flex items-center justify-center gap-2 hover:bg-white/90 transition-colors shadow-lg"
+                >
+                  <Icon name="CalendarDaysIcon" size={18} className="text-primary" />
+                  {ctaBtns[0]?.label || 'Book Appointment'}
+                </Link>
+              )}
+              {ctaBtns[1]?.enabled !== false && (
+                <Link
+                  href={ctaBtns[1]?.href || '/services'}
+                  className="border border-white/50 text-white font-semibold px-8 py-3.5 rounded-full inline-flex items-center justify-center gap-2 hover:bg-white/15 transition-colors"
+                >
+                  {ctaBtns[1]?.label || 'Explore Services'}
+                  <Icon name="ArrowRightIcon" size={18} className="text-white" />
+                </Link>
+              )}
             </div>
           </div>
         </div>

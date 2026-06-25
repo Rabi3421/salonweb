@@ -2,8 +2,12 @@
 
 import React, { useEffect, useRef } from 'react';
 import Icon from '@/components/ui/AppIcon';
+import { useCmsSection } from '@/components/CmsPageProvider';
+import { shouldRenderSection, sectionText } from '@/lib/cms-mappers';
 
 export default function ContactHero() {
+  const cms = useCmsSection('hero');
+  if (!shouldRenderSection(cms)) return null;
   const headRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,14 +33,13 @@ export default function ContactHero() {
       <div ref={headRef} className="relative z-10 max-w-3xl mx-auto text-center">
         <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary border border-border text-primary text-xs font-bold tracking-widest uppercase mb-6">
           <Icon name="ChatBubbleLeftRightIcon" size={13} className="text-primary" />
-          Contact Us
+          {sectionText(cms, 'eyebrow', 'Contact Us')}
         </span>
         <h1 className="font-display text-hero text-foreground font-light">
-          Let&apos;s Plan Your Next <span className="italic text-primary">Beauty Visit</span>
+          {sectionText(cms, 'title', "Let's Plan Your Next Beauty Visit")}
         </h1>
         <p className="text-muted-foreground text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto mt-6">
-          Call, WhatsApp, or send us a message — our team will help you choose the right service and
-          appointment time.
+          {sectionText(cms, 'subtitle', 'Call, WhatsApp, or send us a message — our team will help you choose the right service and appointment time.')}
         </p>
       </div>
     </section>

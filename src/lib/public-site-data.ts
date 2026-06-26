@@ -2,9 +2,51 @@ import { API_BASE_URL, SALON_ID } from '@/lib/env';
 import { fallbackPublicSiteData } from '@/data/public-site-data';
 import type { PublicSiteData, ContactInfo } from '@/types/public-site';
 
-let cachedData: PublicSiteData | null = null;
-let cacheTimestamp = 0;
-const CACHE_TTL = 60 * 1000; // 1 minute
+export type BlockedContact = {
+  phone: string;
+  email: string;
+  address: string;
+};
+
+export type SiteDataResult = {
+  data: PublicSiteData;
+  blocked: boolean;
+  blockedMessage: string;
+  blockedSalonName: string;
+  blockedContact: BlockedContact | null;
+};
+
+async function checkSalonStatus(): Promise<{
+  blocked: boolean;
+  message: string;
+  salonName: string;
+  contact: BlockedContact | null;
+} | null> {
+  if (!API_BASE_URL || !SALON_ID) return null;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/salon/public/site-data`, {
+      headers: { 'x-salon-id': SALON_ID },
+      cache: 'no-store',
+    });
+
+    if (res.status === 403) {
+      const json = await res.json().catch(() => ({}));
+      if (json.blocked) {
+        return {
+          blocked: true,
+          message: json.message || 'This salon is temporarily unavailable.',
+          salonName: json.salonName || '',
+          contact: json.contact ?? null,
+        };
+      }
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
 
 async function fetchPublicSiteData(): Promise<PublicSiteData | null> {
   if (!API_BASE_URL || !SALON_ID) return null;
@@ -14,6 +56,7 @@ async function fetchPublicSiteData(): Promise<PublicSiteData | null> {
       headers: { 'x-salon-id': SALON_ID },
       next: { revalidate: 60 },
     });
+
     if (!res.ok) return null;
     const json = await res.json();
     if (!json.success || !json.data) return null;
@@ -46,34 +89,41 @@ async function fetchPublicSiteData(): Promise<PublicSiteData | null> {
   }
 }
 
-/**
- * Returns the public site data for the current tenant.
- * Fetches from backend API with fallback to static data.
- */
 export function getPublicSiteData(): PublicSiteData {
-  if (cachedData && Date.now() - cacheTimestamp < CACHE_TTL) {
-    return cachedData;
-  }
   return fallbackPublicSiteData;
 }
 
 export async function getPublicSiteDataAsync(): Promise<PublicSiteData> {
-  if (cachedData && Date.now() - cacheTimestamp < CACHE_TTL) {
-    return cachedData;
-  }
-
   try {
     const fetched = await fetchPublicSiteData();
-    if (fetched) {
-      cachedData = fetched;
-      cacheTimestamp = Date.now();
-      return fetched;
-    }
+    if (fetched) return fetched;
   } catch {
-    // Backend unavailable during build or runtime — use fallback
+    // fallback
+  }
+  return fallbackPublicSiteData;
+}
+
+export async function getSiteDataWithStatus(): Promise<SiteDataResult> {
+  const blockedCheck = await checkSalonStatus();
+
+  if (blockedCheck?.blocked) {
+    return {
+      data: fallbackPublicSiteData,
+      blocked: true,
+      blockedMessage: blockedCheck.message,
+      blockedSalonName: blockedCheck.salonName,
+      blockedContact: blockedCheck.contact,
+    };
   }
 
-  return fallbackPublicSiteData;
+  const data = await getPublicSiteDataAsync();
+  return {
+    data,
+    blocked: false,
+    blockedMessage: '',
+    blockedSalonName: '',
+    blockedContact: null,
+  };
 }
 
 export function getFallbackPublicSiteData(): PublicSiteData {

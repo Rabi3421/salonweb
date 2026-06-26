@@ -3,8 +3,10 @@ import type { Metadata, Viewport } from 'next';
 import { Fraunces, DM_Sans } from 'next/font/google';
 import '../styles/tailwind.css';
 import { PublicSiteDataProvider } from '@/components/PublicSiteDataProvider';
-import { getPublicSiteDataAsync } from '@/lib/public-site-data';
+import { getSiteDataWithStatus } from '@/lib/public-site-data';
 import { getSiteUrl } from '@/lib/seo';
+import { SalonUnavailablePage } from '@/components/SalonUnavailablePage';
+import { SalonStatusGuard } from '@/components/SalonStatusGuard';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -25,10 +27,10 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export const revalidate = 60;
+export const revalidate = 0;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const publicSiteData = await getPublicSiteDataAsync();
+  const { data: publicSiteData } = await getSiteDataWithStatus();
   const { brand, contact } = publicSiteData;
   const location = brand.location || contact.city || 'your city';
   const title = `${brand.fullName} | Premium Beauty Salon in ${location}`;
@@ -83,12 +85,22 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const publicSiteData = await getPublicSiteDataAsync();
+  const result = await getSiteDataWithStatus();
 
   return (
     <html lang="en" className={`${fraunces.variable} ${dmSans.variable}`} suppressHydrationWarning>
       <body className={dmSans.className} suppressHydrationWarning>
-        <PublicSiteDataProvider data={publicSiteData}>{children}</PublicSiteDataProvider>
+        {result.blocked ? (
+          <SalonUnavailablePage
+            message={result.blockedMessage}
+            salonName={result.blockedSalonName}
+            contact={result.blockedContact}
+          />
+        ) : (
+          <SalonStatusGuard>
+            <PublicSiteDataProvider data={result.data}>{children}</PublicSiteDataProvider>
+          </SalonStatusGuard>
+        )}
       </body>
     </html>
   );

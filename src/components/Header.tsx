@@ -120,9 +120,9 @@ export default function Header() {
               Book Now
             </Link>
             <Link
-              href={dashboardUser ? '/dashboard' : '/login'}
+              href={dashboardUser ? '/dashboard' : '/create-account'}
               className="flex items-center justify-center w-9 h-9 rounded-full bg-secondary hover:bg-primary/10 transition-colors"
-              aria-label={dashboardUser ? 'Open dashboard' : 'Sign In'}
+              aria-label={dashboardUser ? 'Open dashboard' : 'Create account'}
             >
               <ProfileAvatar user={dashboardUser} />
             </Link>
@@ -166,12 +166,12 @@ export default function Header() {
                 Book Appointment
               </Link>
               <Link
-                href={dashboardUser ? '/dashboard' : '/login'}
+                href={dashboardUser ? '/dashboard' : '/create-account'}
                 onClick={handleNavClick}
                 className="flex items-center justify-center gap-2 py-3 rounded-2xl bg-secondary text-foreground font-medium text-sm"
               >
                 <ProfileAvatar user={dashboardUser} />
-                {dashboardUser ? 'Dashboard' : 'Sign In'}
+                {dashboardUser ? 'Dashboard' : 'Create Account'}
               </Link>
               <div className="flex gap-3">
                 <a

@@ -150,7 +150,7 @@ export default function CreateAccountPage() {
                   </h2>
                   <p className="mt-3 max-w-md text-sm leading-6 text-muted-foreground">
                     You are now registered with {brand.name}. You can book appointments with this
-                    salon and the dashboard team will see your customer profile.
+                    salon and sign in anytime to see your bookings and visit history.
                   </p>
                   <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                     <Link
@@ -159,13 +159,12 @@ export default function CreateAccountPage() {
                     >
                       Book Appointment
                     </Link>
-                    <button
-                      type="button"
-                      onClick={() => setCreatedName('')}
+                    <Link
+                      href="/account/login"
                       className="rounded-2xl border border-border bg-white px-6 py-3 text-sm font-bold text-foreground"
                     >
-                      Create Another
-                    </button>
+                      Customer Sign In
+                    </Link>
                   </div>
                 </div>
               ) : (

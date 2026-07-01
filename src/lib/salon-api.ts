@@ -45,6 +45,7 @@ export type CustomerAccountSignupPayload = {
 export type CustomerAccountSignupResponse = {
   customer: {
     id: string;
+    role: 'end_user';
     customerNo: string;
     name: string;
     phone: string;

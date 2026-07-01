@@ -1,5 +1,9 @@
 export type SalonRole = 'owner' | 'manager' | 'receptionist' | 'stylist' | 'accountant';
 
+export type EndUserRole = 'end_user';
+
+export type AppUserRole = SalonRole | EndUserRole;
+
 export interface SalonAuthUser {
   id: string;
   name: string;

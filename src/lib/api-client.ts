@@ -52,7 +52,11 @@ async function request<T = unknown>(path: string, options?: RequestInit): Promis
     throw new Error('Unable to connect to server.');
   }
 
-  if (res.status === 401 && !path.includes('/auth/login')) {
+  if (
+    res.status === 401 &&
+    !path.includes('/auth/login') &&
+    !path.includes('/api/salon/public/customers')
+  ) {
     const refreshed = await tryRefreshToken();
     if (refreshed) {
       try {

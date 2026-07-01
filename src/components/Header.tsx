@@ -7,8 +7,10 @@ import { usePublicSiteData } from '@/components/PublicSiteDataProvider';
 import AppLogo from '@/components/ui/AppLogo';
 import Icon from '@/components/ui/AppIcon';
 import { getCurrentSalonUser, isMockModeEnabled, MOCK_USERS } from '@/lib/dashboard-auth';
+import { getCurrentCustomer } from '@/lib/customer-account-api';
 import { getContactLinks } from '@/lib/public-site-data';
 import type { SalonAuthUser } from '@/types/auth';
+import type { CustomerAccount } from '@/types/customer-account';
 
 export default function Header() {
   const siteData = usePublicSiteData();
@@ -18,6 +20,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [dashboardUser, setDashboardUser] = useState<SalonAuthUser | null>(null);
+  const [customer, setCustomer] = useState<CustomerAccount | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -44,6 +47,20 @@ export default function Header() {
     }
 
     loadDashboardUser();
+    return () => {
+      mounted = false;
+    };
+  }, [pathname]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadCustomer() {
+      const currentCustomer = await getCurrentCustomer();
+      if (mounted) setCustomer(currentCustomer);
+    }
+
+    loadCustomer();
     return () => {
       mounted = false;
     };
@@ -120,11 +137,13 @@ export default function Header() {
               Book Now
             </Link>
             <Link
-              href={dashboardUser ? '/dashboard' : '/create-account'}
+              href={dashboardUser ? '/dashboard' : customer ? '/account/dashboard' : '/account/login'}
               className="flex items-center justify-center w-9 h-9 rounded-full bg-secondary hover:bg-primary/10 transition-colors"
-              aria-label={dashboardUser ? 'Open dashboard' : 'Create account'}
+              aria-label={
+                dashboardUser || customer ? 'Open dashboard' : 'Customer sign in'
+              }
             >
-              <ProfileAvatar user={dashboardUser} />
+              <ProfileAvatar user={dashboardUser} customer={customer} />
             </Link>
           </div>
 
@@ -166,12 +185,12 @@ export default function Header() {
                 Book Appointment
               </Link>
               <Link
-                href={dashboardUser ? '/dashboard' : '/create-account'}
+                href={dashboardUser ? '/dashboard' : customer ? '/account/dashboard' : '/account/login'}
                 onClick={handleNavClick}
                 className="flex items-center justify-center gap-2 py-3 rounded-2xl bg-secondary text-foreground font-medium text-sm"
               >
-                <ProfileAvatar user={dashboardUser} />
-                {dashboardUser ? 'Dashboard' : 'Create Account'}
+                <ProfileAvatar user={dashboardUser} customer={customer} />
+                {dashboardUser ? 'Dashboard' : customer ? 'My Account' : 'Customer Sign In'}
               </Link>
               <div className="flex gap-3">
                 <a
@@ -199,10 +218,16 @@ export default function Header() {
   );
 }
 
-function ProfileAvatar({ user }: { user: SalonAuthUser | null }) {
-  if (!user) return <Icon name="UserIcon" size={16} className="text-primary" />;
+function ProfileAvatar({
+  user,
+  customer,
+}: {
+  user: SalonAuthUser | null;
+  customer: CustomerAccount | null;
+}) {
+  if (!user && !customer) return <Icon name="UserIcon" size={16} className="text-primary" />;
 
-  if (user.avatar) {
+  if (user?.avatar) {
     return (
       <span
         className="block h-7 w-7 rounded-full bg-cover bg-center ring-1 ring-primary/20"
@@ -213,7 +238,7 @@ function ProfileAvatar({ user }: { user: SalonAuthUser | null }) {
 
   return (
     <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-      {user.name.charAt(0).toUpperCase()}
+      {(user?.name || customer?.name || customer?.email || "U").charAt(0).toUpperCase()}
     </span>
   );
 }
